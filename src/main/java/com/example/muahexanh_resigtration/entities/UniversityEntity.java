@@ -1,6 +1,5 @@
 package com.example.muahexanh_resigtration.entities;
 
-
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,20 +10,15 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "community_leaders")
-public class CommunityLeaderEntity extends UserEntity{
+@Table(name = "universities")
+public class UniversityEntity extends UserEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(targetEntity=ProjectEntity.class)
+    @ManyToMany(targetEntity=ProjectEntity.class)
     private List<ProjectEntity> projects;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "email")
-    private String email;
-
-
+    private String universityName;
+    private String universityStand;
 }

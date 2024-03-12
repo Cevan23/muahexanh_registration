@@ -1,6 +1,7 @@
 package com.example.muahexanh_resigtration.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -9,11 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CommunityLeaderDTO extends UserDTO {
-    @JsonProperty("name")
-    private String name;
+public class UserDTO {
 
-    @JsonProperty("email")
-    private String email;
+    @JsonProperty("username")
+    private String username;
 
+    @JsonProperty("password")
+    private String password;
 }

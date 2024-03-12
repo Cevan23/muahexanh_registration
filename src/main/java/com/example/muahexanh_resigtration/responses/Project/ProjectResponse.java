@@ -32,17 +32,10 @@ public class ProjectResponse {
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .status(project.getStatus())
-                .leaderId(getLeaderId(project))
                 .build();
         return projectResponse;
     }
 
-    private static Long getLeaderId(ProjectEntity project) {
-        if (project.getCommunityLeader() != null) {
-            return project.getCommunityLeader().getId();
-        }
-        return null;
-    }
 
 
 }

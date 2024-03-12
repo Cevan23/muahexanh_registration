@@ -1,8 +1,11 @@
 package com.example.muahexanh_resigtration.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @Getter
@@ -24,5 +27,7 @@ public class ProjectDTO {
 
     @JsonProperty("leader_id")
     private Long leaderId;
+
+
 
 }

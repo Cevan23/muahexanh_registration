@@ -25,9 +25,7 @@ public class ProjectEntity {
     @Column(name = "status")
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "leader_id")
-    private CommunityLeaderEntity communityLeader;
+
 
 
 }
