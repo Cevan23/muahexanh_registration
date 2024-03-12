@@ -1,7 +1,5 @@
 package com.example.muahexanh_resigtration.dtos;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import lombok.*;
 
 @Data

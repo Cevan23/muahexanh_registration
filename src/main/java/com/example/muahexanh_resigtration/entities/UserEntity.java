@@ -1,9 +1,5 @@
 package com.example.muahexanh_resigtration.entities;
-
-import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-
 @Getter
 @Setter
 @NoArgsConstructor

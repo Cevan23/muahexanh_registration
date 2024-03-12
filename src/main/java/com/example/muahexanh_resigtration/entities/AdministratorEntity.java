@@ -1,9 +1,6 @@
 package com.example.muahexanh_resigtration.entities;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter

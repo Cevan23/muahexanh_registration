@@ -1,9 +1,7 @@
 package com.example.muahexanh_resigtration.entities;
-
-import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
+
 
 import java.util.List;
 
