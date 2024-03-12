@@ -12,9 +12,10 @@ public class UniversityEntity extends UserEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToMany(targetEntity=ProjectEntity.class)
     private List<ProjectEntity> projects;
 
+    @Column(name = "university_name")
     private String universityName;
-    private String universityStand;
 }

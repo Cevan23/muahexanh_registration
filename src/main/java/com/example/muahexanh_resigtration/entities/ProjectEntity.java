@@ -3,6 +3,8 @@ package com.example.muahexanh_resigtration.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -25,7 +27,12 @@ public class ProjectEntity {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "date_start")
+    private String dateStart;
 
+    @Column(name = "date_end")
+    private String dateEnd;
 
-
+    @ManyToMany(targetEntity=StudentEntity.class)
+    private List<StudentEntity> students;
 }

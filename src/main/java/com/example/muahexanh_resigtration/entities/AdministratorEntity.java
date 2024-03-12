@@ -10,6 +10,7 @@ public class AdministratorEntity extends UserEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "name", nullable = false)
     private String name;
 }
