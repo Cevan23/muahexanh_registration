@@ -12,8 +12,6 @@ public class CommunityLeaderEntity extends UserEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(targetEntity=ProjectEntity.class)
-    private List<ProjectEntity> projects;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -21,5 +19,6 @@ public class CommunityLeaderEntity extends UserEntity{
     @Column(name = "email")
     private String email;
 
-
+    @OneToMany(targetEntity=ProjectEntity.class)
+    private List<ProjectEntity> projects;
 }
