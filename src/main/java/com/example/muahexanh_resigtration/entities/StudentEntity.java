@@ -20,9 +20,9 @@ public class StudentEntity extends UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "university_id")
-    private UniversityEntity university;
+
+    @JoinColumn(name = "university_name")
+    private String universityName;
 
     @Column(name = "address")
     private String address;
