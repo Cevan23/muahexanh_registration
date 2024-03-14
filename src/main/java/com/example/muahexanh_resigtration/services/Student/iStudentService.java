@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface iStudentService {
 
-    StudentEntity insertStudent(StudentDTO StudentDTO) throws ParseException;
+//    StudentEntity insertStudent(StudentDTO StudentDTO) throws ParseException;
 
     StudentEntity getStudentById(long id) throws Exception;
 

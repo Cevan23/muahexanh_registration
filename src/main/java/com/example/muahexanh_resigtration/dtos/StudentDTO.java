@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 public class StudentDTO extends UserDTO {
 
-    @JsonProperty("university_id")
-    private long universityId;
+    @JsonProperty("university_name")
+    private long universityName;
 
     @JsonProperty("gender")
     private Boolean gender;
