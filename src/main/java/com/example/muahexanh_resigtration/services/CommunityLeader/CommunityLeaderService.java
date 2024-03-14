@@ -26,6 +26,7 @@ public class CommunityLeaderService implements ICommunityLeaderService{
     public List<ProjectEntity> filterProjectsByStatus(Long id,String status) {
         return communityLeaderRepository.findProjectsByLeaderIDAndStatusContainingIgnoreCase(id,status);
     }
+
     @Override
     public CommunityLeaderEntity getCommunityLeaderById(long id) throws Exception {
         Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository.getDetailCommunityLeader(id);
