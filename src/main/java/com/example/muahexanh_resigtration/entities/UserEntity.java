@@ -1,13 +1,15 @@
 package com.example.muahexanh_resigtration.entities;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
-@Data
+import lombok.experimental.SuperBuilder;
+
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @MappedSuperclass
+@SuperBuilder
 public abstract class UserEntity {
 
     @Column(name = "full_name")
