@@ -12,5 +12,11 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
     @Query("SELECT s FROM StudentEntity s WHERE s.id = :studentId")
-    Optional<StudentEntity> getDetailStudent(@Param("studentId") Long studentId);
+    Optional<StudentEntity> getStudentById(@Param("studentId") Long studentId);
+
+    @Query("SELECT s FROM StudentEntity s WHERE s.email = :email" +
+            " AND s.password = :password")
+    Optional<StudentEntity> loginStudent(@Param("email") String email,
+                                        @Param("password") String password);
+    Optional<StudentEntity> findByEmail(String email);
 }

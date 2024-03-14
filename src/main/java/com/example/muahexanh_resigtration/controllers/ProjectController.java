@@ -36,7 +36,11 @@ public class ProjectController {
                 return ResponseEntity.badRequest().body(errorMessages);
             }
             ProjectEntity productResponse = projectService.insertProject(projectDTO);
-            return ResponseEntity.ok(productResponse);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(ProjectResponse.fromProduct(productResponse))
+                    .message("Create project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
