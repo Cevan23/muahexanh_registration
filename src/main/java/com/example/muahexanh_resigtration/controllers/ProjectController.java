@@ -60,6 +60,15 @@ public class ProjectController {
                 .status(HttpStatus.OK)
                 .build());
     }
+    @GetMapping("/getByLeader/{id}")
+    public ResponseEntity<ResponseObject> getProjectbyLeaderId(@Valid @PathVariable("id") Long leaderId) throws Exception {
+        List<ProjectEntity> listProjects = projectService.getAllProjectById(leaderId);
+        return ResponseEntity.ok(ResponseObject.builder()
+                .data(listProjects)
+                .message("Get detail project successfully")
+                .status(HttpStatus.OK)
+                .build());
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseObject> updateProduct(

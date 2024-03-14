@@ -13,6 +13,7 @@ public interface iProjectService {
     ProjectEntity getProjectById(long id) throws Exception;
 
     List<ProjectEntity> getAllProject();
+    List<ProjectEntity> getAllProjectById(long id) throws Exception;
 
     ProjectEntity updateProject(long id, ProjectDTO projectDTO) throws Exception;
 
