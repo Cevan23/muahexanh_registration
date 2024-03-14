@@ -7,36 +7,24 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/communityleader")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CommunityLeaderController {
     private final ICommunityLeaderService communityLeaderService;
     @GetMapping("/search/{id}/{title}")
     public ResponseEntity<ResponseObject> SearchProject(
             @Valid @PathVariable("id") Long leaderId,
-            @Valid @PathVariable("title") String title,
-            BindingResult result
+            @Valid @PathVariable("title") String title
+
     ) {
         try {
-            if (result.hasErrors()) {
-                // Nếu có lỗi, trả về danh sách các lỗi
-                List<String> errorMessages = result.getFieldErrors()
-                        .stream()
-                        .map(FieldError::getDefaultMessage)
-                        .collect(Collectors.toList());
-                return ResponseEntity.badRequest().body(ResponseObject.builder()
-                        .message("Validation failed")
-                        .status(HttpStatus.BAD_REQUEST)
-                        .build());
-            }
+
             List<ProjectEntity> listProjects = communityLeaderService.searchProjectByTitle(leaderId,title);
             return ResponseEntity.ok(ResponseObject.builder()
                     .data(listProjects)
@@ -53,8 +41,8 @@ public class CommunityLeaderController {
 
     @GetMapping("/filterByStatus/{id}/{status}")
     public ResponseEntity<?> filterProjectsByStatus(@Valid @PathVariable("id") Long leaderId,
-                                                    @Valid @PathVariable("status") String status,
-                                                    BindingResult result) {
+                                                    @Valid @PathVariable("status") String status
+                                                   ) {
         try {
             List<ProjectEntity> filteredProjects = communityLeaderService.filterProjectsByStatus(leaderId,status);
             return ResponseEntity.ok(filteredProjects);
