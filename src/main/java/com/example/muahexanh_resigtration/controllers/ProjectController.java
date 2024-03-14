@@ -5,6 +5,7 @@ import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.Project.ProjectResponse;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
+import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import com.example.muahexanh_resigtration.services.Project.iProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +16,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
 public class ProjectController {
 
-
     private final iProjectService projectService;
+
     @PostMapping("")
     public ResponseEntity<?> insertProduct(
             @Valid @RequestBody ProjectDTO projectDTO,
