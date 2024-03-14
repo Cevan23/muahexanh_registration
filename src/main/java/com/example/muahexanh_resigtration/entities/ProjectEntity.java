@@ -3,6 +3,7 @@ package com.example.muahexanh_resigtration.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Getter
@@ -24,6 +25,9 @@ public class ProjectEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "maximum_students")
     private int maximumStudents;
 
@@ -31,10 +35,10 @@ public class ProjectEntity {
     private String status;
 
     @Column(name = "date_start")
-    private String dateStart;
+    private Date dateStart;
 
     @Column(name = "date_end")
-    private String dateEnd;
+    private Date dateEnd;
 
     @ManyToMany(targetEntity=StudentEntity.class)
     private List<StudentEntity> students;
