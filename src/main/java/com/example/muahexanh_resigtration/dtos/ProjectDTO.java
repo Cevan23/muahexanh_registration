@@ -16,9 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectDTO {
     @JsonProperty("title")
-    private Long id;
-
-    @JsonProperty("title")
     @NotBlank(message = "Project title is required")
     private String title;
 
@@ -29,16 +26,19 @@ public class ProjectDTO {
     @JsonProperty("status")
     private String status;
 
-    @JsonProperty("maximumStudent")
+    @JsonProperty("maximumStudents")
     private int maximumStudents;
 
-    @JsonProperty( "date_start")
+    @JsonProperty("address")
+    private String address;
+
+    @JsonProperty("date_start")
     private String dateStart;
 
-    @JsonProperty( "date_end")
+    @JsonProperty("date_end")
     private String dateEnd;
 
-    @JsonProperty( "students")
+    @JsonProperty("students")
     private List<StudentDTO> students;
 
 }
