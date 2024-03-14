@@ -1,8 +1,11 @@
 package com.example.muahexanh_resigtration.services.Project;
 
+import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
+import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
+import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.util.Optional;
 public class ProjectService implements iProjectService {
 
     private final ProjectRepository projectRepository;
+    private final CommunityLeaderRepository communityLeaderRepository;
     @Override
     public ProjectEntity insertProject(ProjectDTO projectDTO) {
         ProjectEntity newProject = ProjectEntity
@@ -41,9 +45,13 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public List<ProjectEntity> getAllProjectById(long id) {
-        Optional<List<ProjectEntity>> optionalProject = projectRepository.getAllProjectByLeaderId(id);
-        return optionalProject.get();
+    public List<ProjectEntity> getAllProjectById(long id) throws Exception {
+        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(id);
+        if (communityLeaderOptional.isPresent()) {
+            return communityLeaderOptional.get().getProjects();
+        } else {
+            throw new DataNotFoundException("Cannot find projects of community leader with ID: " + id);
+        }
     }
 
     @Override
