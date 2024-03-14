@@ -24,7 +24,10 @@ public class ProjectEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "status")
+    @Column(name = "maximum_students")
+    private int maximumStudents;
+
+    @Column(name = "status", columnDefinition = "varchar(255) check (status in ('pending', 'accepted', 'rejected'))")
     private String status;
 
     @Column(name = "date_start")
