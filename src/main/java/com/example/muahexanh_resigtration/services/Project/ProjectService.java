@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.text.SimpleDateFormat;
@@ -19,12 +20,26 @@ public class ProjectService implements iProjectService {
     private final ProjectRepository projectRepository;
 
     @Override
-    public ProjectEntity insertProject(ProjectDTO projectDTO) {
+    public ProjectEntity insertProject(ProjectDTO projectDTO) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+
+        java.sql.Date sqlDateStart, sqlDateEnd;
+
+        java.util.Date parsed = format.parse(projectDTO.getDateStart());
+        sqlDateStart = new java.sql.Date(parsed.getTime());
+
+        parsed = format.parse(projectDTO.getDateEnd());
+        sqlDateEnd = new java.sql.Date(parsed.getTime());
+
         ProjectEntity newProject = ProjectEntity
                 .builder()
                 .title(projectDTO.getTitle())
+                .address(projectDTO.getAddress())
                 .description(projectDTO.getDescription())
                 .status(projectDTO.getStatus())
+                .dateStart(sqlDateStart)
+                .dateEnd(sqlDateEnd)
+                .maximumStudents(projectDTO.getMaximumStudents())
                 .build();
         return projectRepository.save(newProject);
     }
