@@ -40,6 +40,6 @@ public class ProjectEntity {
     @Column(name = "date_end")
     private Date dateEnd;
 
-    @ManyToMany(targetEntity=StudentEntity.class)
+    @ManyToMany(targetEntity= StudentEntity.class)
     private List<StudentEntity> students;
 }

@@ -1,8 +1,6 @@
 package com.example.muahexanh_resigtration.dtos;
 
-import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import lombok.*;
 @Data
 @Getter

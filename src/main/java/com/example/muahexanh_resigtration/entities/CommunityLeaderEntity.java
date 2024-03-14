@@ -7,7 +7,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "community_leaders")
-public class CommunityLeaderEntity extends UserEntity{
+public class CommunityLeaderEntity extends UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

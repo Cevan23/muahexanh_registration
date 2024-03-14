@@ -2,9 +2,6 @@ package com.example.muahexanh_resigtration.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import java.util.List;
-
 @Getter
 @Setter
 @Entity
@@ -15,8 +12,8 @@ public class StudentEntity extends UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(targetEntity=UniversityEntity.class)
-    private  UniversityEntity university;
+    @ManyToOne(targetEntity= UniversityEntity.class)
+    private UniversityEntity university;
 
     @Column(name = "GPA")
     private Float GPA;

@@ -3,7 +3,6 @@ package com.example.muahexanh_resigtration.services.Project;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
-import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

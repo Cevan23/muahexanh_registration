@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "administrators")
-public class AdministratorEntity extends UserEntity{
+public class AdministratorEntity extends UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
