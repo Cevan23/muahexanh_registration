@@ -8,6 +8,11 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class AdministratorDTO extends UserDTO {
+
+    @JsonProperty("id")
+    private Long id;
+
     @JsonProperty("name")
     private String name;
+
 }
