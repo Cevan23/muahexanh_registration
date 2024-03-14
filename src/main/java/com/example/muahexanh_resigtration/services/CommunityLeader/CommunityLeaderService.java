@@ -1,4 +1,4 @@
-package com.example.muahexanh_resigtration.services.Project;
+package com.example.muahexanh_resigtration.services.CommunityLeader;
 
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
