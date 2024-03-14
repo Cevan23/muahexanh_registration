@@ -19,25 +19,25 @@ import java.util.Optional;
 public class StudentService implements iStudentService {
     private final StudentRepository studentRepository;
     private final UniversityRepository universityRepository;
-    @Override
-    public StudentEntity insertStudent(StudentDTO StudentDTO) throws ParseException {
-        Optional<UniversityEntity> university = universityRepository.findById(StudentDTO.getUniversityId());
-
-        StudentEntity newStudent = StudentEntity
-                .builder()
-                .email(StudentDTO.getEmail())
-                .fullName(StudentDTO.getFullName())
-                .password(StudentDTO.getPassword())
-                .personalDescription(StudentDTO.getPersonalDescription())
-                .phoneNumber(StudentDTO.getPhoneNumber())
-                .address(StudentDTO.getAddress())
-                .role("Student")
-                .gender(StudentDTO.getGender())
-                .university(university.get())
-                .build();
-
-        return studentRepository.save(newStudent);
-    }
+//    @Override
+//    public StudentEntity insertStudent(StudentDTO StudentDTO) throws ParseException {
+//        Optional<UniversityEntity> university = universityRepository.findById(StudentDTO.getUniversityId());
+//
+//        StudentEntity newStudent = StudentEntity
+//                .builder()
+//                .email(StudentDTO.getEmail())
+//                .fullName(StudentDTO.getFullName())
+//                .password(StudentDTO.getPassword())
+//                .personalDescription(StudentDTO.getPersonalDescription())
+//                .phoneNumber(StudentDTO.getPhoneNumber())
+//                .address(StudentDTO.getAddress())
+//                .role("Student")
+//                .gender(StudentDTO.getGender())
+//                .universityName(StudentDTO.uni)
+//                .build();
+//
+//        return studentRepository.save(newStudent);
+//    }
     @Override
     public StudentEntity getStudentById(long id) throws Exception {
         return null;

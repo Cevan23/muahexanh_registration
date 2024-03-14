@@ -20,23 +20,23 @@ import java.util.List;
 public class StudentController {
     private final iStudentService StudentService;
 
-    @PostMapping("")
-    public ResponseEntity<?> insertStudent(
-            @Valid @RequestBody StudentDTO StudentDTO,
-            BindingResult result
-    ) {
-        try {
-            if(result.hasErrors()) {
-                List<String> errorMessages = result.getFieldErrors()
-                        .stream()
-                        .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(errorMessages);
-            }
-            StudentEntity productResponse = StudentService.insertStudent(StudentDTO);
-            return ResponseEntity.ok(productResponse);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    @PostMapping("")
+//    public ResponseEntity<?> insertStudent(
+//            @Valid @RequestBody StudentDTO StudentDTO,
+//            BindingResult result
+//    ) {
+//        try {
+//            if(result.hasErrors()) {
+//                List<String> errorMessages = result.getFieldErrors()
+//                        .stream()
+//                        .map(FieldError::getDefaultMessage)
+//                        .toList();
+//                return ResponseEntity.badRequest().body(errorMessages);
+//            }
+//            StudentEntity productResponse = StudentService.insertStudent(StudentDTO);
+//            return ResponseEntity.ok(productResponse);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 }
