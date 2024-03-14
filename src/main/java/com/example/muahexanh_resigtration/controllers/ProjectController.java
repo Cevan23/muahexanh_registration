@@ -68,7 +68,7 @@ public class ProjectController {
         ProjectEntity updateProject = projectService.updateProject(id, projectDTO);
         return ResponseEntity.ok(ResponseObject.builder()
                 .data(updateProject)
-                .message("Update product successfully")
+                .message("Update project successfully")
                 .status(HttpStatus.OK)
                 .build());
     }
