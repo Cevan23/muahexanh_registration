@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class CommunityLeaderService implements iCommunityLeaderService{
+public class CommunityLeaderService implements ICommunityLeaderService{
     private final CommunityLeaderRepository communityLeaderRepository;
 
     @Override
