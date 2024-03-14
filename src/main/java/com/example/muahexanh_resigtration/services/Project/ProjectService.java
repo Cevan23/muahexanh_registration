@@ -68,6 +68,17 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
+    public ProjectEntity getProjectByLeaderIdAndProjectId(long leaderId,long projectId) throws Exception {
+        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(leaderId);
+        Optional<ProjectEntity> projectOptional = projectRepository.findById(projectId);
+        if (projectOptional.isPresent()) {
+            return projectOptional.get();
+        } else {
+            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId+" projectId: "+projectId);
+        }
+    }
+
+    @Override
     public ProjectEntity updateProject(long id, ProjectDTO projectDTO) throws Exception {
         Optional<ProjectEntity> optionalProduct = projectRepository.findById(id);
         if (optionalProduct.isPresent()) {

@@ -1,6 +1,5 @@
 package com.example.muahexanh_resigtration.controllers;
 
-
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.Project.ProjectResponse;
@@ -65,6 +64,16 @@ public class ProjectController {
         List<ProjectEntity> listProjects = projectService.getAllProjectByLeaderId(leaderId);
         return ResponseEntity.ok(ResponseObject.builder()
                 .data(listProjects)
+                .message("Get project successfully")
+                .status(HttpStatus.OK)
+                .build());
+    }
+    @GetMapping("/getByLeaderIDAndProjectID/{leaderId}/{projectId}")
+    public ResponseEntity<ResponseObject> getProjectbyLeaderIdAndProjectId(@Valid @PathVariable("leaderId") Long leaderId,
+                                                                           @Valid @PathVariable("projectId") Long projectId) throws Exception {
+        ProjectEntity project = projectService.getProjectByLeaderIdAndProjectId(leaderId,projectId);
+        return ResponseEntity.ok(ResponseObject.builder()
+                .data(project)
                 .message("Get detail project successfully")
                 .status(HttpStatus.OK)
                 .build());
