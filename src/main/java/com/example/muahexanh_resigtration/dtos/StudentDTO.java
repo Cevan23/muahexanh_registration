@@ -2,27 +2,22 @@ package com.example.muahexanh_resigtration.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-@Data
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentDTO extends UserDTO {
 
-    @JsonProperty("id")
-    private Long id;
 
-    @JsonProperty("fullname")
-    private String fullname;
-
-    @JsonProperty("university")
+    @JsonProperty("university_id")
     private UniversityDTO university;
 
-    @JsonProperty( "GPA")
-    private Float GPA;
+    @JsonProperty("gender")
+    private Boolean gender;
 
     @JsonProperty("address")
     private String address;
 
-    @JsonProperty("personal_transportation")
-    private Boolean personalTransportation;
+    @JsonProperty("personal_description")
+    private String personalDescription;
 }

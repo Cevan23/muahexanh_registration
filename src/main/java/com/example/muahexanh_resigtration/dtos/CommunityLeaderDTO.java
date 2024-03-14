@@ -6,24 +6,14 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class CommunityLeaderDTO extends UserDTO {
-
-    @JsonProperty("id")
-    private Long id;
-
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("email")
-    private String email;
 
     @JsonProperty("projects")
     private List<ProjectEntity> projects;
 
 }
+

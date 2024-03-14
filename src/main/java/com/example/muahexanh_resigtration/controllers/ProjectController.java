@@ -62,7 +62,7 @@ public class ProjectController {
     }
     @GetMapping("/getByLeader/{id}")
     public ResponseEntity<ResponseObject> getProjectbyLeaderId(@Valid @PathVariable("id") Long leaderId) throws Exception {
-        List<ProjectEntity> listProjects = projectService.getAllProjectById(leaderId);
+        List<ProjectEntity> listProjects = projectService.getAllProjectByLeaderId(leaderId);
         return ResponseEntity.ok(ResponseObject.builder()
                 .data(listProjects)
                 .message("Get detail project successfully")

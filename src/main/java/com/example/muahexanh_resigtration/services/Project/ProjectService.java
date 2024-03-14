@@ -58,7 +58,7 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public List<ProjectEntity> getAllProjectById(long id) throws Exception {
+    public List<ProjectEntity> getAllProjectByLeaderId(long id) throws Exception {
         Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(id);
         if (communityLeaderOptional.isPresent()) {
             return communityLeaderOptional.get().getProjects();

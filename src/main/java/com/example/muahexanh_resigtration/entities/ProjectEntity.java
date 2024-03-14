@@ -42,4 +42,5 @@ public class ProjectEntity {
 
     @ManyToMany(targetEntity= StudentEntity.class)
     private List<StudentEntity> students;
+
 }

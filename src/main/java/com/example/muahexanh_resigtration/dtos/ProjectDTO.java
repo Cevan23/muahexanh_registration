@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO {
+
     @JsonProperty("title")
     @NotBlank(message = "Project title is required")
     private String title;
