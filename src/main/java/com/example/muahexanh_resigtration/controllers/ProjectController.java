@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -25,7 +26,7 @@ public class ProjectController {
     private final iProjectService projectService;
 
     @PostMapping("")
-    public ResponseEntity<?> insertProduct(
+    public ResponseEntity<?> insertProject(
             @Valid @RequestBody ProjectDTO projectDTO,
             BindingResult result
     ) {
@@ -37,9 +38,9 @@ public class ProjectController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            ProjectEntity productResponse = projectService.insertProject(projectDTO);
+            ProjectEntity projectResponse = projectService.insertProject(projectDTO);
             return ResponseEntity.ok(ResponseObject.builder()
-                    .data(ProjectResponse.fromProduct(productResponse))
+                    .data(ProjectResponse.fromProject(projectResponse))
                     .message("Create project successfully")
                     .status(HttpStatus.OK)
                     .build());
@@ -50,23 +51,22 @@ public class ProjectController {
 
 
     @GetMapping("")
-    public ResponseEntity<?> getAllProduct() throws Exception {
-        List<ProjectEntity> products = projectService.getAllProject();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<?> getAllProjects() throws Exception {
+        List<Map<String, Object>> projects = projectService.getAllProjects();
+        return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getProductById(@Valid @PathVariable("id") Long projectId) throws Exception {
-        ProjectEntity existingProduct = projectService.getProjectById(projectId);
+    public ResponseEntity<ResponseObject> getProjectById(@Valid @PathVariable("id") Long projectId) throws Exception {
+        ProjectEntity existingProject = projectService.getProjectById(projectId);
         return ResponseEntity.ok(ResponseObject.builder()
-                .data(ProjectResponse.fromProduct(existingProduct))
+                .data(ProjectResponse.fromProject(existingProject))
                 .message("Get detail project successfully")
                 .status(HttpStatus.OK)
                 .build());
     }
     @GetMapping("/getByLeader/{id}")
-    public ResponseEntity<ResponseObject> getProjectbyLeaderId(@Valid @PathVariable("id") Long leaderId) throws Exception {
+    public ResponseEntity<ResponseObject> getProjectByLeaderId(@Valid @PathVariable("id") Long leaderId) throws Exception {
         List<ProjectEntity> listProjects = projectService.getAllProjectByLeaderId(leaderId);
         return ResponseEntity.ok(ResponseObject.builder()
                 .data(listProjects)
@@ -86,7 +86,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateProduct(
+    public ResponseEntity<ResponseObject> updateProject(
             @PathVariable long id,
             @RequestBody ProjectDTO projectDTO) throws Exception {
         ProjectEntity updateProject = projectService.updateProject(id, projectDTO);

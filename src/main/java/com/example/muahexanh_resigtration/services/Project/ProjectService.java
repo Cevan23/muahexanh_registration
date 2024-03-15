@@ -3,6 +3,7 @@ package com.example.muahexanh_resigtration.services.Project;
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
@@ -10,9 +11,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -41,8 +45,8 @@ public class ProjectService implements iProjectService {
                 .status(projectDTO.getStatus())
                 .dateStart(sqlDateStart)
                 .dateEnd(sqlDateEnd)
-//                .maxProjectMembers(projectDTO.getmaxProjectMembers())
-//                .maxSchoolRegistrations(projectDTO.getmaxSchoolRegistrations)
+                .maxProjectMembers(projectDTO.getMaxProjectMembers())
+                .maxSchoolRegistrations(projectDTO.getMaxSchoolRegistrations())
                 .build();
         return projectRepository.save(newProject);
     }
@@ -57,8 +61,26 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public List<ProjectEntity> getAllProject() {
-        return projectRepository.findAll();
+    public List<Map<String, Object>> getAllProjects() {
+        List<ProjectEntity> projects = projectRepository.findAll();
+        return projects.stream()
+                .map(project -> {
+                    Map<String, Object> projectMap = new HashMap<>();
+                    projectMap.put("id", project.getId());
+                    projectMap.put("title", project.getTitle());
+                    projectMap.put("description", project.getDescription());
+                    projectMap.put("address", project.getAddress());
+                    projectMap.put("maximumStudents", project.getMaxProjectMembers());
+                    projectMap.put("maximumSchools", project.getMaxSchoolRegistrations());
+                    projectMap.put("status", project.getStatus());
+                    projectMap.put("dateStart", project.getDateStart());
+                    projectMap.put("dateEnd", project.getDateEnd());
+                    projectMap.put("students", project.getStudents().stream()
+                            .map(StudentEntity::getId)
+                            .collect(Collectors.toList()));
+                    return projectMap;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

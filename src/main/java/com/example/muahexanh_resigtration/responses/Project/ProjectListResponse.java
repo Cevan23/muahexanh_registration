@@ -13,7 +13,7 @@ public class ProjectListResponse {
 
     public static ProjectListResponse fromListProject(List<ProjectEntity> projects) {
         List<ProjectResponse> projectResponses = projects.stream()
-                .map(ProjectResponse::fromProduct)
+                .map(ProjectResponse::fromProject)
                 .collect(Collectors.toList());
 
         ProjectListResponse projectListResponse = new ProjectListResponse();
