@@ -28,8 +28,11 @@ public class ProjectEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "maximum_students")
-    private int maximumStudents;
+    @Column(name = "max_project_members")
+    private int maxProjectMembers;
+
+    @Column(name = "max_school_registrations")
+    private int maxSchoolRegistrations;
 
     @Column(name = "status", columnDefinition = "varchar(255) check (status in ('pending', 'accepted', 'rejected'))")
     private String status;
