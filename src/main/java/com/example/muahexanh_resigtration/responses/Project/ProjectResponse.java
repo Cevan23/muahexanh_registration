@@ -26,14 +26,13 @@ public class ProjectResponse {
     private Long leaderId;
 
     public static ProjectResponse fromProduct(ProjectEntity project) {
-        ProjectResponse projectResponse =  ProjectResponse
+        return ProjectResponse
                 .builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .status(project.getStatus())
                 .build();
-        return projectResponse;
     }
 
 

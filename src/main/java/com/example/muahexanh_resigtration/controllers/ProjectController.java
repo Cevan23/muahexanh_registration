@@ -2,8 +2,10 @@ package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.responses.Project.ProjectListResponse;
 import com.example.muahexanh_resigtration.responses.Project.ProjectResponse;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
+import com.example.muahexanh_resigtration.services.Project.ProjectService;
 import com.example.muahexanh_resigtration.services.Project.iProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -94,5 +96,18 @@ public class ProjectController {
                 .status(HttpStatus.OK)
                 .build());
     }
-
+    @GetMapping("/student/{id}")
+    public ResponseEntity<?> getProjectsOfStudent(@PathVariable Long id) {
+        try {
+            List<ProjectEntity> projectResponse = projectService.getProjectByStudentId(id);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .data(ProjectListResponse.fromListProject(projectResponse))
+                            .message("Get all project of student successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

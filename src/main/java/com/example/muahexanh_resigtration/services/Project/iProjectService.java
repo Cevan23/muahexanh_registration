@@ -15,6 +15,9 @@ public interface iProjectService {
     List<ProjectEntity> getAllProject();
 
     List<ProjectEntity> getAllProjectByLeaderId(long id) throws Exception;
+
+    List<ProjectEntity> getProjectByStudentId(long studentId) throws Exception;
+
     ProjectEntity getProjectByLeaderIdAndProjectId(long leaderId,long projectId) throws Exception;
 
     ProjectEntity updateProject(long id, ProjectDTO projectDTO) throws Exception;
