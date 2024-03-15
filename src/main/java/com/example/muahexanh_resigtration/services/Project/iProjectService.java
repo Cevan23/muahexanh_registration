@@ -5,6 +5,7 @@ import com.example.muahexanh_resigtration.entities.ProjectEntity;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface iProjectService {
 
@@ -12,7 +13,7 @@ public interface iProjectService {
 
     ProjectEntity getProjectById(long id) throws Exception;
 
-    List<ProjectEntity> getAllProject();
+    List<Map<String, Object>> getAllProjects();
 
     List<ProjectEntity> getAllProjectByLeaderId(long id) throws Exception;
 
