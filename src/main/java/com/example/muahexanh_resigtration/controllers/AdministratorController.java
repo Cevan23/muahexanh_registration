@@ -1,14 +1,15 @@
 package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
-import com.example.muahexanh_resigtration.dtos.StudentDTO;
-import com.example.muahexanh_resigtration.entities.ProjectEntity;
-import com.example.muahexanh_resigtration.entities.StudentEntity;
-import com.example.muahexanh_resigtration.responses.Project.ProjectListResponse;
+import com.example.muahexanh_resigtration.dtos.AdministratorDTO;
+
+import com.example.muahexanh_resigtration.entities.AdministratorEntity;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
-import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
-import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
-import com.example.muahexanh_resigtration.services.Student.iStudentService;
+
+import com.example.muahexanh_resigtration.responses.Administrator.AdministratorListResponse;
+import com.example.muahexanh_resigtration.responses.Administrator.AdministratorResponse;
+import com.example.muahexanh_resigtration.services.Administrator.iAdministratorService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,19 +21,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/students")
+@RequestMapping("/api/admins")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class StudentController {
-    private final iStudentService StudentService;
+public class AdministratorController {
+    private final iAdministratorService AdministratorService;
     @PostMapping("/login")
-    public ResponseEntity<?> loginStudent(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> loginAdministrator(@Valid @RequestBody LoginDTO loginDTO) {
         {
             try {
-                StudentEntity studentResponse = StudentService.loginStudent(loginDTO);
+                AdministratorEntity administratorResponse = AdministratorService.loginAdministrator(loginDTO);
                 return ResponseEntity.ok(
                         ResponseObject.builder()
-                                .data(StudentResponse.fromStudent(studentResponse))
+                                .data(AdministratorResponse.fromAdministrator(administratorResponse))
                                 .message("Login successfully")
                                 .status(HttpStatus.OK)
                                 .build());
@@ -41,9 +42,10 @@ public class StudentController {
             }
         }
     }
+
     @PostMapping("")
-    public ResponseEntity<?> insertStudent(
-            @Valid @RequestBody StudentDTO StudentDTO,
+    public ResponseEntity<?> insertAdministrator(
+            @Valid @RequestBody AdministratorDTO AdministratorDTO,
             BindingResult result
     ) {
         try {
@@ -54,11 +56,11 @@ public class StudentController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            StudentEntity studentResponse = StudentService.insertStudent(StudentDTO);
+            AdministratorEntity administratorResponse = AdministratorService.insertAdministrator(AdministratorDTO);
             return ResponseEntity.ok(
                     ResponseObject.builder()
-                            .data(StudentResponse.fromStudent(studentResponse))
-                            .message("Create student successfully")
+                            .data(AdministratorResponse.fromAdministrator(administratorResponse))
+                            .message("Create administrator successfully")
                             .status(HttpStatus.OK)
                             .build());
         } catch (Exception e) {
@@ -67,13 +69,13 @@ public class StudentController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllStudent() {
+    public ResponseEntity<?> getAllAdministrator() {
         try {
-            List<StudentEntity> studentResponse = StudentService.getAllStudent();
+            List<AdministratorEntity> administratorResponse = AdministratorService.getAllAdministrator();
             return ResponseEntity.ok(
                     ResponseObject.builder()
-                            .data(StudentListResponse.fromListStudent(studentResponse))
-                            .message("Get all student successfully")
+                            .data(AdministratorListResponse.fromListAdministrator(administratorResponse))
+                            .message("Get all administrator successfully")
                             .status(HttpStatus.OK)
                             .build());
         } catch (Exception e) {
@@ -82,13 +84,13 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getStudentById(@PathVariable Long id) {
+    public ResponseEntity<?> getAdministratorById(@PathVariable Long id) {
         try {
-            StudentEntity studentResponse = StudentService.getStudentById(id);
+            AdministratorEntity administratorResponse = AdministratorService.getAdministratorById(id);
             return ResponseEntity.ok(
                     ResponseObject.builder()
-                            .data(StudentResponse.fromStudent(studentResponse))
-                            .message("Get student by id successfully")
+                            .data(AdministratorResponse.fromAdministrator(administratorResponse))
+                            .message("Get administrator by id successfully")
                             .status(HttpStatus.OK)
                             .build());
         } catch (Exception e) {
@@ -97,9 +99,9 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateStudent(
+    public ResponseEntity<?> updateAdministrator(
             @PathVariable Long id,
-            @Valid @RequestBody StudentDTO StudentDTO,
+            @Valid @RequestBody AdministratorDTO AdministratorDTO,
             BindingResult result
     ) {
         try {
@@ -110,11 +112,11 @@ public class StudentController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            StudentEntity studentResponse = StudentService.updateStudent(id, StudentDTO);
+            AdministratorEntity administratorResponse = AdministratorService.updateAdministrator(id, AdministratorDTO);
             return ResponseEntity.ok(
                     ResponseObject.builder()
-                            .data(StudentResponse.fromStudent(studentResponse))
-                            .message("Update student successfully")
+                            .data(AdministratorResponse.fromAdministrator(administratorResponse))
+                            .message("Update administrator successfully")
                             .status(HttpStatus.OK)
                             .build());
         } catch (Exception e) {
