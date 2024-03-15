@@ -1,6 +1,7 @@
 package com.example.muahexanh_resigtration.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -25,8 +26,11 @@ public class ProjectDTO {
     @JsonProperty("status")
     private String status;
 
-    @JsonProperty("maximumStudents")
-    private int maximumStudents;
+    @JsonProperty("max_project_members")
+    private int maxProjectMembers;
+
+    @JsonProperty("max_school_registrations")
+    private int maxSchoolRegistrations;
 
     @JsonProperty("address")
     private String address;
