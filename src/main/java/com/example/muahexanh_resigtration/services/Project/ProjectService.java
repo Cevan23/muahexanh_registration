@@ -13,12 +13,14 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.text.SimpleDateFormat;
+
 @Service
 @AllArgsConstructor
 public class ProjectService implements iProjectService {
 
     private final ProjectRepository projectRepository;
     private final CommunityLeaderRepository communityLeaderRepository;
+
     @Override
     public ProjectEntity insertProject(ProjectDTO projectDTO) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
@@ -43,10 +45,11 @@ public class ProjectService implements iProjectService {
                 .build();
         return projectRepository.save(newProject);
     }
+
     @Override
     public ProjectEntity getProjectById(long id) throws Exception {
         Optional<ProjectEntity> optionalProduct = projectRepository.getDetailProject(id);
-        if(optionalProduct.isPresent()) {
+        if (optionalProduct.isPresent()) {
             return optionalProduct.get();
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
@@ -68,13 +71,22 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public ProjectEntity getProjectByLeaderIdAndProjectId(long leaderId,long projectId) throws Exception {
+    public List<ProjectEntity> getProjectByStudentId(long studentId) throws Exception {
+        Optional<List<ProjectEntity>> projects = projectRepository.findByStudentId(studentId);
+        if (projects.isEmpty()) {
+            throw new Exception("Project of student not found");
+        }
+        return projects.get();
+    }
+
+    @Override
+    public ProjectEntity getProjectByLeaderIdAndProjectId(long leaderId, long projectId) throws Exception {
         Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(leaderId);
         Optional<ProjectEntity> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {
             return projectOptional.get();
         } else {
-            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId+" projectId: "+projectId);
+            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
         }
     }
 

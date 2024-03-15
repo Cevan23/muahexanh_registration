@@ -2,13 +2,11 @@ package com.example.muahexanh_resigtration.services.Student;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.StudentDTO;
-import com.example.muahexanh_resigtration.dtos.UniversityDTO;
+import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
-import com.example.muahexanh_resigtration.entities.UniversityEntity;
-import com.example.muahexanh_resigtration.entities.UserEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
+import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import com.example.muahexanh_resigtration.repositories.StudentRepository;
-import com.example.muahexanh_resigtration.repositories.UniversityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StudentService implements iStudentService {
     private final StudentRepository studentRepository;
+    private final ProjectRepository projectRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
@@ -29,7 +28,7 @@ public class StudentService implements iStudentService {
                 .builder()
                 .email(StudentDTO.getEmail())
                 .fullName(StudentDTO.getFullName())
-                .password(passwordEncoder.encode(StudentDTO.getPassword())) // encode the password
+                .password(passwordEncoder.encode(StudentDTO.getPassword()))
                 .personalDescription(StudentDTO.getPersonalDescription())
                 .phoneNumber(StudentDTO.getPhoneNumber())
                 .address(StudentDTO.getAddress())
@@ -48,19 +47,6 @@ public class StudentService implements iStudentService {
             throw new DataNotFoundException("Invalid email or password");
         }
         return student.get();
-    }
-    @Override
-    public StudentEntity getStudentById(long id) throws Exception {
-        Optional<StudentEntity> student = studentRepository.findById(id);
-        if (student.isEmpty()) {
-            throw new Exception("Student not found");
-        }
-        return student.get();
-    }
-
-    @Override
-    public List<StudentEntity> getAllStudent() {
-        return studentRepository.findAll();
     }
 
     @Override
@@ -99,7 +85,22 @@ public class StudentService implements iStudentService {
     }
 
     @Override
-    public void deleteStudent(long id) {
+    public void deleteStudent(long id) throws ParseException {
 
     }
+
+    @Override
+    public StudentEntity getStudentById(long id) throws Exception {
+        Optional<StudentEntity> student = studentRepository.findById(id);
+        if (student.isEmpty()) {
+            throw new Exception("Student not found");
+        }
+        return student.get();
+    }
+
+    @Override
+    public List<StudentEntity> getAllStudent() {
+        return studentRepository.findAll();
+    }
+
 }

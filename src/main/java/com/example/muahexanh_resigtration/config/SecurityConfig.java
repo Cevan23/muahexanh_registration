@@ -8,13 +8,17 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.SecureRandom;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String MY_SECRET_KEY = "muahexanh";
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        SecureRandom secureRandom = new SecureRandom(MY_SECRET_KEY.getBytes());
+        return new BCryptPasswordEncoder(10, secureRandom);
     }
 
     @Bean

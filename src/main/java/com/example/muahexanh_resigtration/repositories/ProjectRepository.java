@@ -21,4 +21,6 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     @Query("SELECT p FROM CommunityLeaderEntity c JOIN c.projects p WHERE c.id = :communityLeaderId AND p.id = :projectId")
     Optional<ProjectEntity> getProjectByLeaderIdAndProjectId(@Param("communityLeaderId") Long communityLeaderId, @Param("projectId") Long projectId);
 
+    @Query("SELECT s FROM ProjectEntity s JOIN s.students st WHERE st.id = :studentId")
+    Optional<List<ProjectEntity>> findByStudentId(@Param("studentId") Long studentId);
 }
