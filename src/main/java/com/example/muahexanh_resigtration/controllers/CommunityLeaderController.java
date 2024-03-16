@@ -2,7 +2,7 @@ package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
-import com.example.muahexanh_resigtration.services.CommunityLeader.ICommunityLeaderService;
+import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CommunityLeaderController {
-    private final ICommunityLeaderService communityLeaderService;
+    private final iCommunityLeaderService communityLeaderService;
     @GetMapping("/search/{id}/{title}")
     public ResponseEntity<ResponseObject> SearchProject(
             @Valid @PathVariable("id") Long leaderId,

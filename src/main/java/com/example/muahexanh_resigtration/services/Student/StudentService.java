@@ -23,7 +23,12 @@ public class StudentService implements iStudentService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public StudentEntity insertStudent(StudentDTO StudentDTO) throws ParseException {
+    public StudentEntity insertStudent(StudentDTO StudentDTO) throws Exception {
+        Optional<StudentEntity> existingStudent = studentRepository.findByEmail(StudentDTO.getEmail());
+        if (existingStudent.isPresent()) {
+            throw new Exception("Email already exists");
+        }
+
         StudentEntity newStudent = StudentEntity
                 .builder()
                 .email(StudentDTO.getEmail())
@@ -33,7 +38,7 @@ public class StudentService implements iStudentService {
                 .phoneNumber(StudentDTO.getPhoneNumber())
                 .address(StudentDTO.getAddress())
                 .role("Student")
-                .gender(StudentDTO.getGender())
+                .isMale(StudentDTO.getIsMale())
                 .universityName(String.valueOf(StudentDTO.getUniversityName()))
                 .build();
 
@@ -75,8 +80,8 @@ public class StudentService implements iStudentService {
         if (StudentDTO.getAddress() != null) {
             studentEntity.setAddress(StudentDTO.getAddress());
         }
-        if (StudentDTO.getGender() != null) {
-            studentEntity.setGender(StudentDTO.getGender());
+        if (StudentDTO.getIsMale() != null) {
+            studentEntity.setIsMale(StudentDTO.getIsMale());
         }
         if (StudentDTO.getUniversityName() != null) {
             studentEntity.setUniversityName(String.valueOf(StudentDTO.getUniversityName()));

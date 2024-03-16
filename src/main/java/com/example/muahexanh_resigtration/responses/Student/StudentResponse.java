@@ -21,8 +21,8 @@ public class StudentResponse {
     @JsonProperty("full_name")
     private String fullName;
 
-    @JsonProperty("gender")
-    private Boolean gender;
+    @JsonProperty("is_male")
+    private Boolean isMale;
 
     @JsonProperty("address")
     private String address;
@@ -45,7 +45,7 @@ public class StudentResponse {
                 .id(student.getId())
                 .email(student.getEmail())
                 .fullName(student.getFullName())
-                .gender(student.getGender())
+                .isMale(student.getIsMale())
                 .address(student.getAddress())
                 .personalDescription(student.getPersonalDescription())
                 .phoneNumber(student.getPhoneNumber())

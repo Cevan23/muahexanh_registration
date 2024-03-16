@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class CommunityLeaderService implements ICommunityLeaderService{
+public class CommunityLeaderService implements iCommunityLeaderService {
     private final CommunityLeaderRepository communityLeaderRepository;
 
     @Override
