@@ -14,12 +14,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(name = "students")
 public class StudentEntity extends UserEntity {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @JoinColumn(name = "university_name")
     private String universityName;
@@ -30,7 +27,7 @@ public class StudentEntity extends UserEntity {
     @Column(name = "personal_description")
     private String personalDescription;
 
-    @Column(name = "gender")
-    private Boolean gender;
+    @Column(name = "is_male")
+    private Boolean isMale;
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface iStudentService {
 
-    StudentEntity insertStudent(StudentDTO StudentDTO) throws ParseException;
+    StudentEntity insertStudent(StudentDTO StudentDTO) throws Exception;
 
     StudentEntity loginStudent(LoginDTO LoginDTO) throws Exception;
 

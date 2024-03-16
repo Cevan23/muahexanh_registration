@@ -13,8 +13,8 @@ public class StudentDTO extends UserDTO {
     @JsonProperty("full_name")
     private String fullName;
 
-    @JsonProperty("gender")
-    private Boolean gender;
+    @JsonProperty("is_male")
+    private Boolean isMale;
 
     @JsonProperty("address")
     private String address;
