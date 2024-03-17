@@ -34,7 +34,7 @@ public class ProjectEntity {
     @Column(name = "max_school_registrations")
     private int maxSchoolRegistrations;
 
-    @Column(name = "status", columnDefinition = "varchar(255) check (status in ('pending', 'accepted', 'rejected'))")
+    @Column(name = "status", columnDefinition = "varchar(255) check (status in ('pending', 'accepted', 'done', 'cancelled'))")
     private String status;
 
     @Column(name = "date_start")
