@@ -131,10 +131,10 @@ public class ProjectService implements iProjectService {
                 existingProject.setStatus(projectDTO.getStatus());
             if (projectDTO.getAddress() != null)
                 existingProject.setAddress(projectDTO.getAddress());
-//            if (projectDTO.getmaxSchoolRegistrations() != 0)
-//                existingProject.setmaxSchoolRegistrations(projectDTO.getmaxSchoolRegistrations());
-//            if (projectDTO.getmaxProjectMembers() != 0)
-//                existingProject.setmaxProjectMembers(projectDTO.getmaxProjectMembers());
+            if (projectDTO.getMaxSchoolRegistrations() != 0)
+                existingProject.setMaxSchoolRegistrations(projectDTO.getMaxSchoolRegistrations());
+            if (projectDTO.getMaxProjectMembers() != 0)
+                existingProject.setMaxProjectMembers(projectDTO.getMaxProjectMembers());
             if (projectDTO.getDateStart() != null) {
                 parsed = format.parse(projectDTO.getDateStart());
                 sqlDateStart = new java.sql.Date(parsed.getTime());

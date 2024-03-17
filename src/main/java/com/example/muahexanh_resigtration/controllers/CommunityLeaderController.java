@@ -18,7 +18,7 @@ import java.util.List;
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
     @GetMapping("/search/{id}/{title}")
-    public ResponseEntity<ResponseObject> SearchProject(
+    public ResponseEntity<ResponseObject> SearchProjectByTitle(
             @Valid @PathVariable("id") Long leaderId,
             @Valid @PathVariable("title") String title
 
