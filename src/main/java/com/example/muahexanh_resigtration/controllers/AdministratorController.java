@@ -4,6 +4,7 @@ import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.AdministratorDTO;
 
 import com.example.muahexanh_resigtration.entities.AdministratorEntity;
+import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 
 import com.example.muahexanh_resigtration.responses.Administrator.AdministratorListResponse;
@@ -26,6 +27,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AdministratorController {
     private final iAdministratorService AdministratorService;
+
     @PostMapping("/login")
     public ResponseEntity<?> loginAdministrator(@Valid @RequestBody LoginDTO loginDTO) {
         {
@@ -123,4 +125,6 @@ public class AdministratorController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 }

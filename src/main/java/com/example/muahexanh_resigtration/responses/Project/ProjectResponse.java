@@ -45,7 +45,7 @@ public class ProjectResponse {
                 .dateStart(String.valueOf(project.getDateStart()))
                 .dateEnd(String.valueOf(project.getDateEnd()))
                 .maxProjectMembers(project.getMaxProjectMembers())
-                .maxSchoolRegistrations(project.getMaxSchoolRegistrations())
+                .maxSchoolRegistrations(project.getMaxSchoolRegistrationMembers())
                 .build();
     }
 }
