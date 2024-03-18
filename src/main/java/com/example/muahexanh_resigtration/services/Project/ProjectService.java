@@ -45,8 +45,9 @@ public class ProjectService implements iProjectService {
                 .status(projectDTO.getStatus())
                 .dateStart(sqlDateStart)
                 .dateEnd(sqlDateEnd)
+                .imgRoot(projectDTO.getImgRoot())
                 .maxProjectMembers(projectDTO.getMaxProjectMembers())
-                .maxSchoolRegistrations(projectDTO.getMaxSchoolRegistrations())
+                .maxSchoolRegistrationMembers(projectDTO.getMaxSchoolRegistrationMembers())
                 .build();
         return projectRepository.save(newProject);
     }
@@ -71,10 +72,11 @@ public class ProjectService implements iProjectService {
                     projectMap.put("description", project.getDescription());
                     projectMap.put("address", project.getAddress());
                     projectMap.put("maximumStudents", project.getMaxProjectMembers());
-                    projectMap.put("maximumSchools", project.getMaxSchoolRegistrations());
+                    projectMap.put("maximumSchools", project.getMaxSchoolRegistrationMembers());
                     projectMap.put("status", project.getStatus());
                     projectMap.put("dateStart", project.getDateStart());
                     projectMap.put("dateEnd", project.getDateEnd());
+                    projectMap.put("imgRoot", project.getImgRoot());
                     projectMap.put("students", project.getStudents().stream()
                             .map(StudentEntity::getId)
                             .collect(Collectors.toList()));
@@ -129,10 +131,12 @@ public class ProjectService implements iProjectService {
                 existingProject.setDescription(projectDTO.getDescription());
             if (projectDTO.getStatus() != null)
                 existingProject.setStatus(projectDTO.getStatus());
+            if (projectDTO.getImgRoot() != null)
+                existingProject.setImgRoot(projectDTO.getImgRoot());
             if (projectDTO.getAddress() != null)
                 existingProject.setAddress(projectDTO.getAddress());
-            if (projectDTO.getMaxSchoolRegistrations() != 0)
-                existingProject.setMaxSchoolRegistrations(projectDTO.getMaxSchoolRegistrations());
+            if (projectDTO.getMaxSchoolRegistrationMembers() != 0)
+                existingProject.setMaxSchoolRegistrationMembers(projectDTO.getMaxSchoolRegistrationMembers());
             if (projectDTO.getMaxProjectMembers() != 0)
                 existingProject.setMaxProjectMembers(projectDTO.getMaxProjectMembers());
             if (projectDTO.getDateStart() != null) {

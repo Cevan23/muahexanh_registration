@@ -28,4 +28,6 @@ public interface CommunityLeaderRepository extends JpaRepository<CommunityLeader
             "JOIN c.projects p " +
             "WHERE c.id = :communityLeaderId AND p.status = :status")
     List<ProjectEntity> getProjectsByLeaderIDAndStatus(@Param("communityLeaderId") Long communityLeaderId, @Param("status") String status);
+
+    Optional<CommunityLeaderEntity> findByEmail(String email);
 }
