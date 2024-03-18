@@ -70,7 +70,7 @@ public class ProjectController {
         List<ProjectEntity> listProjects = projectService.getAllProjectByLeaderId(leaderId);
         return ResponseEntity.ok(ResponseObject.builder()
                 .data(listProjects)
-                .message("Get project successfully")
+                .message("Get projects successfully")
                 .status(HttpStatus.OK)
                 .build());
     }

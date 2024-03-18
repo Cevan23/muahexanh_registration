@@ -6,6 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 public class LoginDTO{
+
     @JsonProperty("email")
     private String email;
 
