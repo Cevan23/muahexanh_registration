@@ -2,6 +2,8 @@ package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.entities.StudentEntity;
+import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.responses.Project.ProjectListResponse;
 import com.example.muahexanh_resigtration.responses.Project.ProjectResponse;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
@@ -138,4 +140,56 @@ public class ProjectController {
                 .status(HttpStatus.OK)
                 .build());
     }
+
+    @GetMapping("/studentOfProject")
+    public ResponseEntity<?> getAllStudentOfProject(@Valid @RequestParam("projectId") String projectId)
+    {
+        try {
+            List<StudentEntity> studentOfProject = projectService.findAllStudentOfProject(Long.parseLong(projectId));
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(studentOfProject)
+                    .message("Get All Student Of Project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ResponseObject.builder()
+                    .message("An error occurred: " + e.getMessage())
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build());
+        }
+    }
+
+    @GetMapping("/studentOfProjectgetInOrtherAddress")
+    public ResponseEntity<?> getAllStudentOfProjectInOrtherAddress(
+            @Valid @RequestParam("projectId") String projectId,
+            @Valid @RequestParam("address") String address) throws Exception  {
+        try {
+            List<StudentEntity> studentOfProject = projectService.getAllStudentOfProjectInOrtherAddress(Long.parseLong(projectId), address);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(studentOfProject)
+                    .message("Get All Student Of Project In Orther Address successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ResponseObject.builder()
+                    .message("An error occurred: " + e.getMessage())
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build());
+        }
+    }
+
+    @PostMapping("/rejectStudentByAddress")
+    public String rejectStudentByAddress(
+            @Valid @RequestParam("projectId") String projectId,
+            @Valid @RequestParam("address") String address)
+    {
+        try {
+            // Call the service method to reject students by address
+            projectService.rejectStudentByAddress(Long.parseLong(projectId), address);
+            return "Students rejected successfully";
+        } catch (Exception e) {
+            return "An error occurred: " + e.getMessage();
+        }
+    }
+
 }
