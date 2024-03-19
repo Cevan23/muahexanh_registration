@@ -3,6 +3,7 @@ package com.example.muahexanh_resigtration.controllers;
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import jakarta.validation.Valid;
@@ -57,7 +58,7 @@ public class CommunityLeaderController {
     @PostMapping("/login")
     public ResponseEntity<?> loginCommunityLeader(@Valid @RequestBody LoginDTO loginDTO) {
         try {
-            CommunityLeaderEntity communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
+            CommunityLeaderResponseUser communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
             Map<String, Object> dataMap = new HashMap<>();
             dataMap.put("id", communityLeader.getId());
             dataMap.put("fullName", communityLeader.getFullName());
