@@ -1,7 +1,6 @@
 package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
-import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 import com.example.muahexanh_resigtration.responses.ResponseObject;

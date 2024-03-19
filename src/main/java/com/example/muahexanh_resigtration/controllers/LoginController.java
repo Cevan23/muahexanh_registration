@@ -2,7 +2,6 @@ package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.entities.AdministratorEntity;
-import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
@@ -30,6 +29,7 @@ public class LoginController {
     private final iUniversityService universityService;
     private final iCommunityLeaderService communityLeaderService;
     private final iAdministratorService AdministratorService;
+
     @PostMapping("")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
         String role = loginDTO.getRole();
@@ -64,7 +64,6 @@ public class LoginController {
             case "communityleader":
                 // Attempt to login as a community leader
 
-
                 try {
                     CommunityLeaderResponseUser communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
                     Map<String, Object> dataMap = new HashMap<>();
@@ -74,10 +73,9 @@ public class LoginController {
                     dataMap.put("role", communityLeader.getRole());
                     dataMap.put("id", communityLeader.getId());
 
-
                     return ResponseEntity.ok(
                             ResponseObject.builder()
-                                    //.data(communityLeader)
+                                    // .data(communityLeader)
                                     .data(dataMap)
                                     .message("Login successfully as a community leader")
                                     .status(HttpStatus.OK)
