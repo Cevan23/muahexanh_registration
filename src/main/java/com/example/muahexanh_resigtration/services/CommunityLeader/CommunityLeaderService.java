@@ -119,9 +119,11 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         communityLeaderRepository.delete(communityLeaderEntity);
 
     }
+
     @Override
     public CommunityLeaderResponseUser loginCommunityLeader(LoginDTO loginDTO) throws Exception {
-        Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository.findByEmail(loginDTO.getEmail());
+        Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository
+                .findByEmail(loginDTO.getEmail());
         if (optionalCommunityLeader.isEmpty()
                 || !passwordEncoder.matches(loginDTO.getPassword(), optionalCommunityLeader.get().getPassword())) {
             throw new DataNotFoundException("Invalid email or password");
@@ -129,9 +131,9 @@ public class CommunityLeaderService implements iCommunityLeaderService {
 
         CommunityLeaderEntity communityLeader = optionalCommunityLeader.get(); // Trích xuất đối tượng từ Optional
 
-        // Tạo một đối tượng CommunityLeaderResponseUser từ dữ liệu của CommunityLeaderEntity
+        // Tạo một đối tượng CommunityLeaderResponseUser từ dữ liệu của
+        // CommunityLeaderEntity
         return CommunityLeaderResponseUser.fromCommunityLeaderUser(communityLeader);
     }
-
 
 }

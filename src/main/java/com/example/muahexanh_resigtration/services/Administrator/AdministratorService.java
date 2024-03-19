@@ -57,7 +57,7 @@ public class AdministratorService implements iAdministratorService {
             administratorEntity.setFullName(AdministratorDTO.getFullName());
         }
         if (AdministratorDTO.getPassword() != null) {
-            administratorEntity.setPassword(AdministratorDTO.getPassword());
+            administratorEntity.setPassword(passwordEncoder.encode(AdministratorDTO.getPassword()));
         }
         if (AdministratorDTO.getPhoneNumber() != null) {
             administratorEntity.setPhoneNumber(AdministratorDTO.getPhoneNumber());

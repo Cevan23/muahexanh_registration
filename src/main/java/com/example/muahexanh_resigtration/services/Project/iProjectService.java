@@ -24,4 +24,7 @@ public interface iProjectService {
     ProjectEntity updateProject(long id, ProjectDTO projectDTO) throws Exception;
 
     void deleteProject(long id);
+
+    List<ProjectEntity> getProjectByUniversityId(long universityId) throws Exception;
+    ProjectEntity updateProjectDone(long id) throws Exception;
 }

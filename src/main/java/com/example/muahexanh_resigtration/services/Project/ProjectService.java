@@ -4,9 +4,13 @@ import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
+import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
+import com.example.muahexanh_resigtration.repositories.StudentRepository;
+import com.example.muahexanh_resigtration.repositories.UniversityRepository;
+import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ public class ProjectService implements iProjectService {
 
     private final ProjectRepository projectRepository;
     private final CommunityLeaderRepository communityLeaderRepository;
+    private final UniversityRepository universityRepository;
+    private final StudentRepository studentRepository;
 
     @Override
     public ProjectEntity insertProject(ProjectDTO projectDTO) throws ParseException {
@@ -54,9 +60,9 @@ public class ProjectService implements iProjectService {
 
     @Override
     public ProjectEntity getProjectById(long id) throws Exception {
-        Optional<ProjectEntity> optionalProduct = projectRepository.getDetailProject(id);
-        if (optionalProduct.isPresent()) {
-            return optionalProduct.get();
+        Optional<ProjectEntity> optionalProject = projectRepository.getDetailProject(id);
+        if (optionalProject.isPresent()) {
+            return optionalProject.get();
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
     }
@@ -185,7 +191,38 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
+    public List<ProjectEntity> getProjectByUniversityId(long universityId) throws Exception {
+        if (universityId == 0) {
+            // Handle the case where leaderId or projectId is 0
+            throw new DataNotFoundException("Cannot find project with universityId: " + universityId);
+        }
+        Optional<UniversityEntity> universityEntityOptional = universityRepository.findById(universityId);
+        if (universityEntityOptional.isPresent()) {
+            List<ProjectEntity> listProject = universityEntityOptional.get().getProjects();
+            if(listProject.isEmpty()){
+                throw new DataNotFoundException("Cannot find project with universityId: " + universityId);
+            }else {
+                return listProject;
+            }
+        } else {
+            throw new DataNotFoundException("Cannot find university with universityId: " + universityId);
+        }
+    }
+
+    @Override
     public void deleteProject(long id) {
 
+    }
+
+    @Override
+    public ProjectEntity updateProjectDone(long id) throws Exception {
+        Optional<ProjectEntity> optionalProject = projectRepository.findById(id);
+        if (optionalProject.isPresent()) {
+            ProjectEntity existingProject = optionalProject.get();
+            if (existingProject.getStatus() != null)
+                existingProject.setStatus("done");
+            return projectRepository.save(existingProject);
+        }
+        throw new DataNotFoundException("Cannot find project with id =" + id);
     }
 }

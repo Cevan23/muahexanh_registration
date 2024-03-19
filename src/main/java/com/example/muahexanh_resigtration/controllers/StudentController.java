@@ -103,6 +103,21 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/filter/{address}")
+    public ResponseEntity<?> getAllStudentFilterByAddress(@PathVariable String address) {
+        try {
+            Map<String, Object> studentMap = StudentService.getAllStudentContainAddress(address);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .data(studentMap)
+                            .message("Get student by containing address successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping("/applyProject")
     public String applyProject(@Valid @RequestBody Map<String, String> requestBody) {
         String studentId = requestBody.get("studentId");

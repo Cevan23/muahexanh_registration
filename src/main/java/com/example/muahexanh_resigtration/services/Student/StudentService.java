@@ -12,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -117,6 +119,17 @@ public class StudentService implements iStudentService {
     }
 
     @Override
+    public Map<String, Object> getAllStudentContainAddress(String address) throws Exception {
+        List<StudentEntity> students = studentRepository.findByAddressContaining(address);
+        if (students.isEmpty()) {
+            throw new Exception("Students not found with similar address " + address);
+        }
+        Map<String, Object> studentMap = new HashMap<>();
+        studentMap.put("number_of_student", students.size());
+        studentMap.put("students", students);
+        return studentMap;
+    }
+
     public void applyProject(long studentId, long projectId) throws Exception {
         Optional<StudentEntity> student = studentRepository.findById(studentId);
         if (student.isEmpty()) {
