@@ -1,10 +1,12 @@
 package com.example.muahexanh_resigtration.services.CommunityLeader;
 
+import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CommunityLeaderService implements iCommunityLeaderService {
     private final CommunityLeaderRepository communityLeaderRepository;
-
+    private final BCryptPasswordEncoder passwordEncoder;
     @Override
     public List<ProjectEntity> searchProjectByTitle(Long id,String title) {
         Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(id);
@@ -49,5 +51,14 @@ public class CommunityLeaderService implements iCommunityLeaderService {
             return optionalCommunityLeader.get();
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
+    }
+
+    @Override
+    public CommunityLeaderEntity loginCommunityLeader(LoginDTO loginDTO) throws Exception {
+        Optional<CommunityLeaderEntity> communityLeader = communityLeaderRepository.findByEmail(loginDTO.getEmail());
+        if (communityLeader.isEmpty() || !passwordEncoder.matches(loginDTO.getPassword(), communityLeader.get().getPassword())) {
+            throw new DataNotFoundException("Invalid email or password");
+        }
+        return communityLeader.get();
     }
 }
