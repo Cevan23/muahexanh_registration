@@ -1,8 +1,10 @@
 package com.example.muahexanh_resigtration.services.CommunityLeader;
 
+import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
+import com.example.muahexanh_resigtration.exceptions.InvalidParamException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,9 @@ public class CommunityLeaderService implements iCommunityLeaderService {
     private final CommunityLeaderRepository communityLeaderRepository;
 
     @Override
-    public List<ProjectEntity> searchProjectByTitle(Long id,String title) {
-        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(id);
+    public List<ProjectEntity> searchProjectByTitle(Long id, String title) {
+        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository
+                .getDetailCommunityLeader(id);
 
         if (communityLeaderOptional.isPresent()) {
             CommunityLeaderEntity communityLeader = communityLeaderOptional.get();
@@ -37,17 +40,30 @@ public class CommunityLeaderService implements iCommunityLeaderService {
     }
 
     @Override
-    public List<ProjectEntity> filterProjectsByStatus(Long id,String status) {
+    public List<ProjectEntity> filterProjectsByStatus(Long id, String status) {
 
-        return communityLeaderRepository.getProjectsByLeaderIDAndStatus(id,status);
+        return communityLeaderRepository.getProjectsByLeaderIDAndStatus(id, status);
     }
 
     @Override
     public CommunityLeaderEntity getCommunityLeaderById(long id) throws Exception {
-        Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository.getDetailCommunityLeader(id);
-        if(optionalCommunityLeader.isPresent()) {
+        Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository
+                .getDetailCommunityLeader(id);
+        if (optionalCommunityLeader.isPresent()) {
             return optionalCommunityLeader.get();
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
+    }
+
+    @Override
+    public CommunityLeaderEntity loginCommunityLeader(LoginDTO LoginDTO) throws Exception {
+        Optional<CommunityLeaderEntity> communityLeader = communityLeaderRepository
+                .loginCommunityLeader(LoginDTO.getEmail(), LoginDTO.getPassword());
+
+        // Bcrypt was not applied as database password in database didn't encode.
+        if (communityLeader.isEmpty())
+            throw new InvalidParamException("Email or password is not correct");
+
+        return communityLeader.get();
     }
 }

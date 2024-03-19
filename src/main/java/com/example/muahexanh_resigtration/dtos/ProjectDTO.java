@@ -29,9 +29,6 @@ public class ProjectDTO {
     @JsonProperty("max_project_members")
     private int maxProjectMembers;
 
-    @JsonProperty("max_school_registrations")
-    private int maxSchoolRegistrations;
-
     @JsonProperty("address")
     private String address;
 
@@ -43,5 +40,8 @@ public class ProjectDTO {
 
     @JsonProperty("students")
     private List<StudentDTO> students;
+
+    @JsonProperty("max_school_registrations")
+    private int maxSchoolRegistrations;
 
 }

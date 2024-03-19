@@ -1,5 +1,7 @@
 package com.example.muahexanh_resigtration.controllers;
 
+import com.example.muahexanh_resigtration.dtos.LoginDTO;
+import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
@@ -8,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/communityleader")
@@ -17,6 +21,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
+
     @GetMapping("/search/{id}/{title}")
     public ResponseEntity<ResponseObject> SearchProjectByTitle(
             @Valid @PathVariable("id") Long leaderId,
@@ -25,7 +30,7 @@ public class CommunityLeaderController {
     ) {
         try {
 
-            List<ProjectEntity> listProjects = communityLeaderService.searchProjectByTitle(leaderId,title);
+            List<ProjectEntity> listProjects = communityLeaderService.searchProjectByTitle(leaderId, title);
             return ResponseEntity.ok(ResponseObject.builder()
                     .data(listProjects)
                     .message("Get detail project successfully")
@@ -41,14 +46,34 @@ public class CommunityLeaderController {
 
     @GetMapping("/filterByStatus/{id}/{status}")
     public ResponseEntity<?> filterProjectsByStatus(@Valid @PathVariable("id") Long leaderId,
-                                                    @Valid @PathVariable("status") String status
-                                                   ) {
+            @Valid @PathVariable("status") String status) {
         try {
-            List<ProjectEntity> filteredProjects = communityLeaderService.filterProjectsByStatus(leaderId,status);
+            List<ProjectEntity> filteredProjects = communityLeaderService.filterProjectsByStatus(leaderId, status);
             return ResponseEntity.ok(filteredProjects);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> loginCommunityLeader(@Valid @RequestBody LoginDTO loginDTO) {
+        try {
+            CommunityLeaderEntity communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("id", communityLeader.getId());
+            dataMap.put("fullName", communityLeader.getFullName());
+            dataMap.put("phoneNumber", communityLeader.getPhoneNumber());
+            dataMap.put("email", communityLeader.getEmail());
+
+            // return a community leader id
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .message("Found community leader account")
+                            .status(HttpStatus.OK)
+                            .data(dataMap)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

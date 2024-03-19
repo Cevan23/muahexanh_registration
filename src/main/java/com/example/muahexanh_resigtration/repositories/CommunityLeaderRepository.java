@@ -3,6 +3,7 @@ package com.example.muahexanh_resigtration.repositories;
 
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.entities.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +29,9 @@ public interface CommunityLeaderRepository extends JpaRepository<CommunityLeader
             "JOIN c.projects p " +
             "WHERE c.id = :communityLeaderId AND p.status = :status")
     List<ProjectEntity> getProjectsByLeaderIDAndStatus(@Param("communityLeaderId") Long communityLeaderId, @Param("status") String status);
+
+    @Query("SELECT c FROM CommunityLeaderEntity c WHERE c.email = :email" +
+            " AND c.password = :password")
+    Optional<CommunityLeaderEntity> loginCommunityLeader(@Param("email") String email,
+                                         @Param("password") String password);
 }
