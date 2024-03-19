@@ -1,6 +1,7 @@
 package com.example.muahexanh_resigtration.repositories;
 
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.entities.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     @Query("SELECT s FROM ProjectEntity s JOIN s.students st WHERE st.id = :studentId")
     Optional<List<ProjectEntity>> findByStudentId(@Param("studentId") Long studentId);
+
+    @Query("SELECT p.students FROM ProjectEntity p WHERE p.id = :projectId")
+    Optional<List<StudentEntity>> findAllStudentOfProject(@Param("projectId") Long projectId);
 }

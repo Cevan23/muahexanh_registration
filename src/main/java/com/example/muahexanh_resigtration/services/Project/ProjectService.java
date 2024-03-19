@@ -215,6 +215,59 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
+    public List<StudentEntity> findAllStudentOfProject(Long projectId) throws Exception {
+        Optional<List<StudentEntity>> optionalStudentsOfProject = projectRepository.findAllStudentOfProject(projectId);
+        if(optionalStudentsOfProject.isPresent()){
+            return optionalStudentsOfProject.get();
+        }else {
+            throw new DataNotFoundException("No students found for project with ID: " + projectId);
+        }
+    }
+
+    @Override
+    public void rejectStudentByAddress(Long projectId,String address) throws Exception{
+        // Filter students based on the provided address
+        List<StudentEntity> studentsWithAddress = studentRepository.findByAddressContaining(address);
+
+        // Check if studentsWithAddress is not empty
+        if (!studentsWithAddress.isEmpty()) {
+            // Retrieve the project entity
+            Optional<ProjectEntity> optionalProject = projectRepository.findById(projectId);
+
+            if (optionalProject.isPresent()) {
+                ProjectEntity project = optionalProject.get();
+
+                // Update the students associated with the project
+                project.setStudents(studentsWithAddress);
+
+                // Save the updated project entity
+                projectRepository.save(project);
+            } else {
+                throw new DataNotFoundException("Project not found with ID: " + projectId);
+            }
+        } else {
+            throw new DataNotFoundException("No students found with the provided address: " + address);
+        }
+    }
+
+
+    @Override
+    public List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId,String address) throws Exception{
+        Optional<List<StudentEntity>> optionalStudentsOfProject = projectRepository.findAllStudentOfProject(projectId);
+        if(optionalStudentsOfProject.isPresent()){
+            // Get the list of students associated with the project
+            List<StudentEntity> studentsOfProject = optionalStudentsOfProject.get();
+
+            // Filter students based on the provided address
+            List<StudentEntity> studentsWithAddress = studentRepository.findByAddressContaining(address);
+            // Exclude students from studentsOfProject that are also in studentsWithAddress
+            studentsOfProject.removeAll(studentsWithAddress);
+            return studentsOfProject;
+        }else {
+            throw new DataNotFoundException("No students found for project with ID: " + projectId);
+        }
+    }
+    @Override
     public ProjectEntity updateProjectDone(long id) throws Exception {
         Optional<ProjectEntity> optionalProject = projectRepository.findById(id);
         if (optionalProject.isPresent()) {
