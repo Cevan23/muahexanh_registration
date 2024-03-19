@@ -8,6 +8,7 @@ import com.example.muahexanh_resigtration.entities.StudentEntity;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface iStudentService {
 
@@ -22,4 +23,5 @@ public interface iStudentService {
     StudentEntity getStudentById(long id) throws Exception;
 
     List<StudentEntity> getAllStudent();
+    Map<String, Object> getAllStudentContainAddress(String address) throws Exception;
 }

@@ -114,4 +114,29 @@ public class ProjectController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/university/{id}")
+    public ResponseEntity<?> getProjectsOfUniversity(@PathVariable Long id) {
+        try {
+            List<ProjectEntity> projectResponses = projectService.getProjectByUniversityId(id);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .data(ProjectListResponse.fromListProject(projectResponses))
+                            .message("Get all project of student successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PutMapping("/updateDone/{id}")
+    public ResponseEntity<ResponseObject> updateProjectDone(
+            @PathVariable long id) throws Exception {
+        ProjectEntity updateProject = projectService.updateProjectDone(id);
+        return ResponseEntity.ok(ResponseObject.builder()
+                .data(updateProject)
+                .message("Update project successfully")
+                .status(HttpStatus.OK)
+                .build());
+    }
 }

@@ -20,5 +20,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
     Optional<StudentEntity> loginStudent(@Param("email") String email,
                                         @Param("password") String password);
     Optional<StudentEntity> findByEmail(String email);
+    @Query("SELECT s FROM StudentEntity s WHERE LOWER(s.address) LIKE LOWER(concat('%', :address, ' %'))")
+    List<StudentEntity> findByAddressContaining(@Param("address") String address);
 
 }

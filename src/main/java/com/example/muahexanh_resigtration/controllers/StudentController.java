@@ -18,6 +18,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -100,6 +101,21 @@ public class StudentController {
                     ResponseObject.builder()
                             .data(StudentResponse.fromStudent(studentResponse))
                             .message("Update student successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filter/{address}")
+    public ResponseEntity<?> getAllStudentFilterByAddress(@PathVariable String address) {
+        try {
+            Map<String, Object> studentMap = StudentService.getAllStudentContainAddress(address);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .data(studentMap)
+                            .message("Get student by containing address successfully")
                             .status(HttpStatus.OK)
                             .build());
         } catch (Exception e) {
