@@ -29,11 +29,14 @@ public class ProjectDTO {
     @JsonProperty("max_project_members")
     private int maxProjectMembers;
 
-    @JsonProperty("max_school_registrations")
-    private int maxSchoolRegistrations;
+    @JsonProperty("max_school_registrations_members")
+    private int maxSchoolRegistrationMembers;
 
     @JsonProperty("address")
     private String address;
+
+    @JsonProperty("img_root")
+    private String imgRoot;
 
     @JsonProperty("date_start")
     private String dateStart;

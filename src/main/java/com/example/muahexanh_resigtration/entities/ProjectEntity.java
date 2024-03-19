@@ -31,11 +31,14 @@ public class ProjectEntity {
     @Column(name = "max_project_members")
     private int maxProjectMembers;
 
-    @Column(name = "max_school_registrations")
-    private int maxSchoolRegistrations;
+    @Column(name = "max_school_registration_members")
+    private int maxSchoolRegistrationMembers;
 
     @Column(name = "status", columnDefinition = "varchar(255) check (status in ('pending', 'accepted', 'done', 'cancelled'))")
     private String status;
+
+    @Column(name = "img_root")
+    private String imgRoot;
 
     @Column(name = "date_start")
     private Date dateStart;
