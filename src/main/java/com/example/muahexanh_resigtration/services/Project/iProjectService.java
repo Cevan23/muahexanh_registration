@@ -19,7 +19,7 @@ public interface iProjectService {
 
     List<ProjectEntity> getProjectByStudentId(long studentId) throws Exception;
 
-    ProjectEntity getProjectByLeaderIdAndProjectId(long leaderId,long projectId) throws Exception;
+    Map<String, Object> getProjectByLeaderIdAndProjectId(long leaderId,long projectId) throws Exception;
 
     ProjectEntity updateProject(long id, ProjectDTO projectDTO) throws Exception;
 

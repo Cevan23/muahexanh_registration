@@ -8,6 +8,7 @@ import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -45,8 +46,9 @@ public class ProjectService implements iProjectService {
                 .status(projectDTO.getStatus())
                 .dateStart(sqlDateStart)
                 .dateEnd(sqlDateEnd)
+                .imgRoot(projectDTO.getImgRoot())
                 .maxProjectMembers(projectDTO.getMaxProjectMembers())
-                .maxSchoolRegistrations(projectDTO.getMaxSchoolRegistrations())
+                .maxSchoolRegistrationMembers(projectDTO.getMaxSchoolRegistrationMembers())
                 .build();
         return projectRepository.save(newProject);
     }
@@ -71,10 +73,11 @@ public class ProjectService implements iProjectService {
                     projectMap.put("description", project.getDescription());
                     projectMap.put("address", project.getAddress());
                     projectMap.put("maximumStudents", project.getMaxProjectMembers());
-                    projectMap.put("maximumSchools", project.getMaxSchoolRegistrations());
+                    projectMap.put("maximumSchools", project.getMaxSchoolRegistrationMembers());
                     projectMap.put("status", project.getStatus());
                     projectMap.put("dateStart", project.getDateStart());
                     projectMap.put("dateEnd", project.getDateEnd());
+                    projectMap.put("imgRoot", project.getImgRoot());
                     projectMap.put("students", project.getStudents().stream()
                             .map(StudentEntity::getId)
                             .collect(Collectors.toList()));
@@ -103,11 +106,38 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public ProjectEntity getProjectByLeaderIdAndProjectId(long leaderId, long projectId) throws Exception {
+    public Map<String, Object> getProjectByLeaderIdAndProjectId(long leaderId, long projectId) throws Exception {
+        if (leaderId == 0 || projectId == 0) {
+            // Handle the case where leaderId or projectId is 0
+            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+        }
         Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(leaderId);
         Optional<ProjectEntity> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {
-            return projectOptional.get();
+
+            List<Map<String, Object>> studentsInfo = projectOptional.get().getStudents().stream()
+                    .map(student -> {
+                        Map<String, Object> studentMap = new HashMap<>();
+                        studentMap.put("id", student.getId());
+                        studentMap.put("address", student.getAddress());
+                        studentMap.put("phone_number", student.getPhoneNumber());
+                        studentMap.put("full_name", student.getFullName());
+                        return studentMap;
+                    })
+                    .toList();
+
+            Map<String, Object> projectMap = new HashMap<>();
+            projectMap.put("id", projectOptional.get().getId());
+            projectMap.put("title", projectOptional.get().getTitle());
+            projectMap.put("description", projectOptional.get().getDescription());
+            projectMap.put("address", projectOptional.get().getAddress());
+            projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
+            projectMap.put("maximumSchools", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("status", projectOptional.get().getStatus());
+            projectMap.put("dateStart", projectOptional.get().getDateStart());
+            projectMap.put("dateEnd", projectOptional.get().getDateEnd());
+            projectMap.put("students", studentsInfo);
+            return projectMap;
         } else {
             throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
         }
@@ -129,10 +159,12 @@ public class ProjectService implements iProjectService {
                 existingProject.setDescription(projectDTO.getDescription());
             if (projectDTO.getStatus() != null)
                 existingProject.setStatus(projectDTO.getStatus());
+            if (projectDTO.getImgRoot() != null)
+                existingProject.setImgRoot(projectDTO.getImgRoot());
             if (projectDTO.getAddress() != null)
                 existingProject.setAddress(projectDTO.getAddress());
-            if (projectDTO.getMaxSchoolRegistrations() != 0)
-                existingProject.setMaxSchoolRegistrations(projectDTO.getMaxSchoolRegistrations());
+            if (projectDTO.getMaxSchoolRegistrationMembers() != 0)
+                existingProject.setMaxSchoolRegistrationMembers(projectDTO.getMaxSchoolRegistrationMembers());
             if (projectDTO.getMaxProjectMembers() != 0)
                 existingProject.setMaxProjectMembers(projectDTO.getMaxProjectMembers());
             if (projectDTO.getDateStart() != null) {

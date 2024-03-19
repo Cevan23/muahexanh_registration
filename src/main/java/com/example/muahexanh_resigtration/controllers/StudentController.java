@@ -25,22 +25,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentController {
     private final iStudentService StudentService;
-    @PostMapping("/login")
-    public ResponseEntity<?> loginStudent(@Valid @RequestBody LoginDTO loginDTO) {
-        {
-            try {
-                StudentEntity studentResponse = StudentService.loginStudent(loginDTO);
-                return ResponseEntity.ok(
-                        ResponseObject.builder()
-                                .data(StudentResponse.fromStudent(studentResponse))
-                                .message("Login successfully")
-                                .status(HttpStatus.OK)
-                                .build());
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-            }
-        }
-    }
+
     @PostMapping("")
     public ResponseEntity<?> insertStudent(
             @Valid @RequestBody StudentDTO StudentDTO,

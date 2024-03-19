@@ -74,15 +74,19 @@ public class ProjectController {
                 .status(HttpStatus.OK)
                 .build());
     }
-    @GetMapping("/getByLeaderIDAndProjectID/{leaderId}/{projectId}")
-    public ResponseEntity<ResponseObject> getProjectbyLeaderIdAndProjectId(@Valid @PathVariable("leaderId") Long leaderId,
-                                                                           @Valid @PathVariable("projectId") Long projectId) throws Exception {
-        ProjectEntity project = projectService.getProjectByLeaderIdAndProjectId(leaderId,projectId);
-        return ResponseEntity.ok(ResponseObject.builder()
-                .data(project)
-                .message("Get detail project successfully")
-                .status(HttpStatus.OK)
-                .build());
+    @GetMapping("/getProjectDetail/")
+    public ResponseEntity<?> getProjectbyLeaderIdAndProjectId(@Valid @RequestParam("leaderId") Long leaderId,
+                                                                           @Valid @RequestParam("projectId") Long projectId)  {
+        try{
+            Map<String, Object> project = projectService.getProjectByLeaderIdAndProjectId(leaderId,projectId);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(project)
+                    .message("Get detail project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

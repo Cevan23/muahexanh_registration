@@ -54,7 +54,6 @@ public class CommunityLeaderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
     @PostMapping("/login")
     public ResponseEntity<?> loginCommunityLeader(@Valid @RequestBody LoginDTO loginDTO) {
         try {
