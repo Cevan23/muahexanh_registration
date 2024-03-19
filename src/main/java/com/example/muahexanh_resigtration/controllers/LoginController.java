@@ -5,6 +5,7 @@ import com.example.muahexanh_resigtration.entities.AdministratorEntity;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
+import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
 import com.example.muahexanh_resigtration.services.Administrator.iAdministratorService;
@@ -65,11 +66,7 @@ public class LoginController {
 
 
                 try {
-                    CommunityLeaderEntity communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
-                    //Chỗ nãy đang bị dư thừa dữ liệu, đăng nhập không cần phải list ra tất cả projects
-                    //Cân nhắc config lại class community leader response
-
-
+                    CommunityLeaderResponseUser communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
                     Map<String, Object> dataMap = new HashMap<>();
                     dataMap.put("fullName", communityLeader.getFullName());
                     dataMap.put("email", communityLeader.getEmail());
