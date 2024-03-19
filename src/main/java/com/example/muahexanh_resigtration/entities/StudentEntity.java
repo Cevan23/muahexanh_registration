@@ -1,7 +1,5 @@
 package com.example.muahexanh_resigtration.entities;
 
-import com.example.muahexanh_resigtration.dtos.UniversityDTO;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

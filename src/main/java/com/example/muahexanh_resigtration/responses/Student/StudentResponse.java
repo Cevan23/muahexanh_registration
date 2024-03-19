@@ -1,6 +1,5 @@
 package com.example.muahexanh_resigtration.responses.Student;
 
-import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
