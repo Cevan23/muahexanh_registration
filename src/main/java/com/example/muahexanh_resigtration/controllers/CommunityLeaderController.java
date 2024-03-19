@@ -22,10 +22,10 @@ import java.util.Map;
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
 
-    @GetMapping("/search/{id}/{title}")
+    @GetMapping("/search")
     public ResponseEntity<ResponseObject> SearchProjectByTitle(
-            @Valid @PathVariable("id") Long leaderId,
-            @Valid @PathVariable("title") String title
+            @Valid @RequestParam("id") Long leaderId,
+            @Valid @RequestParam("title") String title
 
     ) {
         try {
@@ -44,9 +44,9 @@ public class CommunityLeaderController {
         }
     }
 
-    @GetMapping("/filterByStatus/{id}/{status}")
-    public ResponseEntity<?> filterProjectsByStatus(@Valid @PathVariable("id") Long leaderId,
-            @Valid @PathVariable("status") String status) {
+    @GetMapping("/filterByStatus")
+    public ResponseEntity<?> filterProjectsByStatus(@Valid @RequestParam("id") Long leaderId,
+            @Valid @RequestParam("status") String status) {
         try {
             List<ProjectEntity> filteredProjects = communityLeaderService.filterProjectsByStatus(leaderId, status);
             return ResponseEntity.ok(filteredProjects);
