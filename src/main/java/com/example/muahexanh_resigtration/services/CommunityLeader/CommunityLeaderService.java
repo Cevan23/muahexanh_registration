@@ -1,12 +1,10 @@
 package com.example.muahexanh_resigtration.services.CommunityLeader;
 
-import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
-import com.example.muahexanh_resigtration.dtos.StudentDTO;
-
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
+import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
+
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
-import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import lombok.AllArgsConstructor;
@@ -120,6 +118,7 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         communityLeaderRepository.delete(communityLeaderEntity);
 
     }
+
     @Override
     public CommunityLeaderEntity loginCommunityLeader(LoginDTO loginDTO) throws Exception {
         Optional<CommunityLeaderEntity> communityLeader = communityLeaderRepository.findByEmail(loginDTO.getEmail());
@@ -129,4 +128,5 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         }
         return communityLeader.get();
     }
+
 }

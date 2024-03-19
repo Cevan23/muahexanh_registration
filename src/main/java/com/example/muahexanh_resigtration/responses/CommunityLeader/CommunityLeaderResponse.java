@@ -2,8 +2,6 @@ package com.example.muahexanh_resigtration.responses.CommunityLeader;
 
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
-import com.example.muahexanh_resigtration.entities.StudentEntity;
-import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 

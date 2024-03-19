@@ -17,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/login")
 @RequiredArgsConstructor
@@ -26,54 +29,79 @@ public class LoginController {
     private final iUniversityService universityService;
     private final iCommunityLeaderService communityLeaderService;
     private final iAdministratorService AdministratorService;
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
-        try {
-            // Attempt to login as a student
-            StudentEntity studentResponse = StudentService.loginStudent(loginDTO);
-            return ResponseEntity.ok(
-                    ResponseObject.builder()
-                            .data(StudentResponse.fromStudent(studentResponse))
-                            .message("Login successfully as a student")
-                            .status(HttpStatus.OK)
-                            .build());
-        } catch (Exception e) {
-            // If login as a student fails, try to login as a university
-            try {
-                UniversityEntity university = universityService.loginUniversity(loginDTO);
-                return ResponseEntity.ok(
-                        ResponseObject.builder()
-                                .data(university)
-                                .message("Login successfully as a university")
-                                .status(HttpStatus.OK)
-                                .build());
-            } catch (Exception ex) {
-                // If login as a university fails, try to login as a community leader
+        String role = loginDTO.getRole();
+
+        switch (role) {
+            case "student":
                 try {
-                    CommunityLeaderEntity communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
+                    // Attempt to login as a student
+                    StudentEntity studentResponse = StudentService.loginStudent(loginDTO);
                     return ResponseEntity.ok(
                             ResponseObject.builder()
-                                    .data(communityLeader)
+                                    .data(StudentResponse.fromStudent(studentResponse))
+                                    .message("Login successfully as a student")
+                                    .status(HttpStatus.OK)
+                                    .build());
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+                }
+            case "university":
+                // Attempt to login as a university
+                try {
+                    UniversityEntity university = universityService.loginUniversity(loginDTO);
+                    return ResponseEntity.ok(
+                            ResponseObject.builder()
+                                    .data(university)
+                                    .message("Login successfully as a university")
+                                    .status(HttpStatus.OK)
+                                    .build());
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+                }
+            case "communityleader":
+                // Attempt to login as a community leader
+
+
+                try {
+                    CommunityLeaderEntity communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
+                    //Chỗ nãy đang bị dư thừa dữ liệu, đăng nhập không cần phải list ra tất cả projects
+                    //Cân nhắc config lại class community leader response
+
+
+                    Map<String, Object> dataMap = new HashMap<>();
+                    dataMap.put("fullName", communityLeader.getFullName());
+                    dataMap.put("email", communityLeader.getEmail());
+                    dataMap.put("phoneNumber", communityLeader.getPhoneNumber());
+                    dataMap.put("role", communityLeader.getRole());
+                    dataMap.put("id", communityLeader.getId());
+
+
+                    return ResponseEntity.ok(
+                            ResponseObject.builder()
+                                    //.data(communityLeader)
+                                    .data(dataMap)
                                     .message("Login successfully as a community leader")
                                     .status(HttpStatus.OK)
                                     .build());
-                } catch (Exception exc) {
-                    // If login as a community leader fails, try to login as an administrator
-                    try {
-                        AdministratorEntity administrator = AdministratorService.loginAdministrator(loginDTO);
-                        return ResponseEntity.ok(
-                                ResponseObject.builder()
-                                        .data(administrator)
-                                        .message("Login successfully as an administrator")
-                                        .status(HttpStatus.OK)
-                                        .build());
-                    } catch (Exception exce) {
-                        // If all attempts fail, return an UNAUTHORIZED status
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-                    }
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
                 }
-            }
+            default:
+                // Attempt to login as a admin
+                try {
+                    AdministratorEntity administrator = AdministratorService.loginAdministrator(loginDTO);
+                    return ResponseEntity.ok(
+                            ResponseObject.builder()
+                                    .data(administrator)
+                                    .message("Login successfully as an administrator")
+                                    .status(HttpStatus.OK)
+                                    .build());
+                } catch (Exception exce) {
+                    // If all attempts fail, return an UNAUTHORIZED status
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+                }
         }
     }
-
 }
