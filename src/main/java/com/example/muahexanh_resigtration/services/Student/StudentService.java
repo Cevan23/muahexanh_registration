@@ -44,6 +44,10 @@ public class StudentService implements iStudentService {
                 .universityName(String.valueOf(StudentDTO.getUniversityName()))
                 .build();
 
+        if (newStudent == null) {
+            throw new Exception("Cannot create student");
+        }
+
         return studentRepository.save(newStudent);
     }
 
@@ -88,6 +92,10 @@ public class StudentService implements iStudentService {
         if (StudentDTO.getUniversityName() != null) {
             studentEntity.setUniversityName(String.valueOf(StudentDTO.getUniversityName()));
         }
+
+        if (studentEntity == null) {
+            throw new Exception("Cannot update student");
+        }
         return studentRepository.save(studentEntity);
     }
 
@@ -114,11 +122,34 @@ public class StudentService implements iStudentService {
     public Map<String, Object> getAllStudentContainAddress(String address) throws Exception {
         List<StudentEntity> students = studentRepository.findByAddressContaining(address);
         if (students.isEmpty()) {
-            throw new Exception("Students not found with similar address "+address);
+            throw new Exception("Students not found with similar address " + address);
         }
         Map<String, Object> studentMap = new HashMap<>();
         studentMap.put("number_of_student", students.size());
         studentMap.put("students", students);
         return studentMap;
     }
+
+    public void applyProject(long studentId, long projectId) throws Exception {
+        Optional<StudentEntity> student = studentRepository.findById(studentId);
+        if (student.isEmpty()) {
+            throw new DataNotFoundException("Cannot find student with id = " + studentId);
+        }
+        Optional<ProjectEntity> project = projectRepository.findById(projectId);
+        if (project.isEmpty()) {
+            throw new DataNotFoundException("Cannot find project with id = " + projectId);
+        }
+        StudentEntity studentEntity = student.get();
+        ProjectEntity projectEntity = project.get();
+
+        // Check if the student has already applied to the project
+        if (projectEntity.getStudents().contains(studentEntity)) {
+            throw new Exception(
+                    "Student has already applied to project");
+        }
+
+        projectEntity.getStudents().add(studentEntity);
+        projectRepository.save(projectEntity);
+    }
+
 }

@@ -1,10 +1,7 @@
 package com.example.muahexanh_resigtration.controllers;
 
-import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.StudentDTO;
-import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
-import com.example.muahexanh_resigtration.responses.Project.ProjectListResponse;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
 import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
@@ -30,8 +27,7 @@ public class StudentController {
     @PostMapping("")
     public ResponseEntity<?> insertStudent(
             @Valid @RequestBody StudentDTO StudentDTO,
-            BindingResult result
-    ) {
+            BindingResult result) {
         try {
             if (result.hasErrors()) {
                 List<String> errorMessages = result.getFieldErrors()
@@ -86,8 +82,7 @@ public class StudentController {
     public ResponseEntity<?> updateStudent(
             @PathVariable Long id,
             @Valid @RequestBody StudentDTO StudentDTO,
-            BindingResult result
-    ) {
+            BindingResult result) {
         try {
             if (result.hasErrors()) {
                 List<String> errorMessages = result.getFieldErrors()
@@ -122,4 +117,18 @@ public class StudentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/applyProject")
+    public String applyProject(@Valid @RequestBody Map<String, String> requestBody) {
+        String studentId = requestBody.get("studentId");
+        String projectId = requestBody.get("projectId");
+
+        try {
+            StudentService.applyProject(Long.parseLong(studentId), Long.parseLong(projectId));
+            return "Apply project successfully";
+        } catch (Exception e) {
+            return "Can not apply project: " + e.getMessage();
+        }
+    }
+
 }

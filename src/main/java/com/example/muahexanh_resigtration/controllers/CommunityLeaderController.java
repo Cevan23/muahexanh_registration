@@ -1,8 +1,8 @@
 package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
-import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import jakarta.validation.Valid;
@@ -22,10 +22,10 @@ import java.util.Map;
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
 
-    @GetMapping("/search/{id}/{title}")
+    @GetMapping("/search")
     public ResponseEntity<ResponseObject> SearchProjectByTitle(
-            @Valid @PathVariable("id") Long leaderId,
-            @Valid @PathVariable("title") String title
+            @Valid @RequestParam("id") Long leaderId,
+            @Valid @RequestParam("title") String title
 
     ) {
         try {
@@ -44,9 +44,9 @@ public class CommunityLeaderController {
         }
     }
 
-    @GetMapping("/filterByStatus/{id}/{status}")
-    public ResponseEntity<?> filterProjectsByStatus(@Valid @PathVariable("id") Long leaderId,
-            @Valid @PathVariable("status") String status) {
+    @GetMapping("/filterByStatus")
+    public ResponseEntity<?> filterProjectsByStatus(@Valid @RequestParam("id") Long leaderId,
+            @Valid @RequestParam("status") String status) {
         try {
             List<ProjectEntity> filteredProjects = communityLeaderService.filterProjectsByStatus(leaderId, status);
             return ResponseEntity.ok(filteredProjects);
@@ -57,7 +57,7 @@ public class CommunityLeaderController {
     @PostMapping("/login")
     public ResponseEntity<?> loginCommunityLeader(@Valid @RequestBody LoginDTO loginDTO) {
         try {
-            CommunityLeaderEntity communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
+            CommunityLeaderResponseUser communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
             Map<String, Object> dataMap = new HashMap<>();
             dataMap.put("id", communityLeader.getId());
             dataMap.put("fullName", communityLeader.getFullName());

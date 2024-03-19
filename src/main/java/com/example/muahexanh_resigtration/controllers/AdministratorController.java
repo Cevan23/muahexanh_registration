@@ -4,20 +4,15 @@ import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.AdministratorDTO;
 
-import com.example.muahexanh_resigtration.dtos.StudentDTO;
 import com.example.muahexanh_resigtration.entities.AdministratorEntity;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
-import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponse;
-import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 
 import com.example.muahexanh_resigtration.responses.Administrator.AdministratorListResponse;
 import com.example.muahexanh_resigtration.responses.Administrator.AdministratorResponse;
-import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
 import com.example.muahexanh_resigtration.services.Administrator.iAdministratorService;
 
-import com.example.muahexanh_resigtration.services.CommunityLeader.CommunityLeaderService;
 import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -2,8 +2,6 @@ package com.example.muahexanh_resigtration.services.Student;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.StudentDTO;
-import com.example.muahexanh_resigtration.entities.ProjectEntity;
-import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
 
 import java.text.ParseException;
@@ -23,5 +21,8 @@ public interface iStudentService {
     StudentEntity getStudentById(long id) throws Exception;
 
     List<StudentEntity> getAllStudent();
+
     Map<String, Object> getAllStudentContainAddress(String address) throws Exception;
+
+    void applyProject(long studentId, long projectId) throws Exception;
 }
