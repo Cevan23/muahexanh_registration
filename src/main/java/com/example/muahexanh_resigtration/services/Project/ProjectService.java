@@ -8,7 +8,6 @@ import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -88,7 +87,8 @@ public class ProjectService implements iProjectService {
 
     @Override
     public List<ProjectEntity> getAllProjectByLeaderId(long id) throws Exception {
-        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(id);
+        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository
+                .getDetailCommunityLeader(id);
         if (communityLeaderOptional.isPresent()) {
             return communityLeaderOptional.get().getProjects();
         } else {
@@ -109,9 +109,10 @@ public class ProjectService implements iProjectService {
     public Map<String, Object> getProjectByLeaderIdAndProjectId(long leaderId, long projectId) throws Exception {
         if (leaderId == 0 || projectId == 0) {
             // Handle the case where leaderId or projectId is 0
-            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
         }
-        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(leaderId);
+
         Optional<ProjectEntity> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {
 
@@ -139,7 +140,8 @@ public class ProjectService implements iProjectService {
             projectMap.put("students", studentsInfo);
             return projectMap;
         } else {
-            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
         }
     }
 

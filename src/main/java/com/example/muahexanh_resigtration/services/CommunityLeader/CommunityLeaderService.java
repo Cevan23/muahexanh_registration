@@ -7,6 +7,7 @@ import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
+import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -120,13 +121,19 @@ public class CommunityLeaderService implements iCommunityLeaderService {
     }
 
     @Override
-    public CommunityLeaderEntity loginCommunityLeader(LoginDTO loginDTO) throws Exception {
-        Optional<CommunityLeaderEntity> communityLeader = communityLeaderRepository.findByEmail(loginDTO.getEmail());
-        if (communityLeader.isEmpty()
-                || !passwordEncoder.matches(loginDTO.getPassword(), communityLeader.get().getPassword())) {
+    public CommunityLeaderResponseUser loginCommunityLeader(LoginDTO loginDTO) throws Exception {
+        Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository
+                .findByEmail(loginDTO.getEmail());
+        if (optionalCommunityLeader.isEmpty()
+                || !passwordEncoder.matches(loginDTO.getPassword(), optionalCommunityLeader.get().getPassword())) {
             throw new DataNotFoundException("Invalid email or password");
         }
-        return communityLeader.get();
+
+        CommunityLeaderEntity communityLeader = optionalCommunityLeader.get(); // Trích xuất đối tượng từ Optional
+
+        // Tạo một đối tượng CommunityLeaderResponseUser từ dữ liệu của
+        // CommunityLeaderEntity
+        return CommunityLeaderResponseUser.fromCommunityLeaderUser(communityLeader);
     }
 
 }

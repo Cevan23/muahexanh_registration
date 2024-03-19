@@ -4,6 +4,7 @@ import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
+import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 
 import java.util.List;
 
@@ -21,5 +22,5 @@ public interface iCommunityLeaderService {
 
     void deleteCommunityLeader(Long id) throws Exception;
 
-    CommunityLeaderEntity loginCommunityLeader(LoginDTO loginDTO) throws Exception;
+    CommunityLeaderResponseUser loginCommunityLeader(LoginDTO loginDTO) throws Exception;
 }

@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface iUniversityService {
 
-    ResponseEntity<String> addProjectsToUniversity(Long universityId, List<Long> projectIds) throws Exception;
+    void addProjectsToUniversity(Long universityId, List<Long> projectIds) throws Exception;
 
+    void addProjectToUniversity(Long universityId, Long projectId) throws Exception;
     UniversityEntity addUniversity(UniversityEntity university);
 
     Optional<UniversityEntity> getUniversityById(Long id);

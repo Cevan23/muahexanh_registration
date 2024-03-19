@@ -4,12 +4,11 @@ import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
+import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import com.example.muahexanh_resigtration.repositories.UniversityRepository;
 import com.example.muahexanh_resigtration.services.Project.iProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
@@ -24,13 +23,14 @@ public class UniversityService implements iUniversityService{
     @Autowired
     private UniversityRepository universityRepository;
     private final iProjectService projectService;
+    private final ProjectRepository projectRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     @Override
-    public ResponseEntity<String> addProjectsToUniversity(Long universityId, List<Long> projectIds){
+    public void addProjectsToUniversity(Long universityId, List<Long> projectIds) throws Exception {
 
         UniversityEntity university = universityRepository.findById(universityId).orElse(null);
         if (university == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("University not found");
+            throw new DataNotFoundException("University not found"+ universityId);
         }
 
         // Check for duplicate projectIds
@@ -41,15 +41,15 @@ public class UniversityService implements iUniversityService{
             boolean projectExists = university.getProjects().stream()
                     .anyMatch(project -> project.getId().equals(projectId));
             if (projectExists) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Project ID " + projectId + " already exists for this university");
+                throw new DataNotFoundException("Project ID " + projectId + " already exists for this university");
             }
         }
         if (uniqueProjectIds.size() != projectIds.size()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Duplicate project IDs detected");
+            throw new DataNotFoundException("Duplicate project IDs detected");
         } else {
             // Add projects to the university
             for (Long projectId : projectIds) {
-                ProjectEntity project = null;
+                ProjectEntity project;
                 try {
                     project = projectService.getProjectById(projectId);
                 } catch (Exception e) {
@@ -59,11 +59,28 @@ public class UniversityService implements iUniversityService{
                     university.getProjects().add(project);
                 }
             }
-
             universityRepository.save(university);
 
-            return ResponseEntity.ok("Projects added to university successfully");
         }
+    }
+
+    @Override
+    public void addProjectToUniversity(Long universityId, Long projectId) throws Exception {
+
+        UniversityEntity university = universityRepository.findById(universityId).orElse(null);
+        if (university == null) {
+            throw new DataNotFoundException("University not found"+ universityId);
+        }
+        Optional<ProjectEntity> project = projectRepository.findById(projectId);
+        if (project.isEmpty()) {
+            throw new DataNotFoundException("Cannot find project with id = " + projectId);
+        }
+        ProjectEntity projectEntity = project.get();
+        if (university.getProjects().contains(projectEntity)) {
+            throw new DataNotFoundException("Project ID " + projectId + " already exists for this university");
+        }
+        university.getProjects().add(projectEntity);
+        universityRepository.save(university);
     }
 
     @Override
