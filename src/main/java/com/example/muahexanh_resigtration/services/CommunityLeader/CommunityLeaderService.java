@@ -119,6 +119,8 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         CommunityLeaderEntity communityLeaderEntity = communityLeader.get();
         communityLeaderRepository.delete(communityLeaderEntity);
 
+    }
+    @Override
     public CommunityLeaderEntity loginCommunityLeader(LoginDTO loginDTO) throws Exception {
         Optional<CommunityLeaderEntity> communityLeader = communityLeaderRepository.findByEmail(loginDTO.getEmail());
         if (communityLeader.isEmpty()
