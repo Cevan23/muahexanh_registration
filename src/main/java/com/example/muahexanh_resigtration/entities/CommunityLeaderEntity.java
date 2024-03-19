@@ -1,6 +1,8 @@
 package com.example.muahexanh_resigtration.entities;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 import java.util.List;
 
 @Getter
@@ -8,7 +10,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "community_leaders")
 public class CommunityLeaderEntity extends UserEntity {
 
