@@ -1,24 +1,15 @@
 package com.example.muahexanh_resigtration.services.Project;
 
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
-import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
-import com.example.muahexanh_resigtration.entities.ProjectEntity;
-import com.example.muahexanh_resigtration.entities.StudentEntity;
-import com.example.muahexanh_resigtration.entities.UniversityEntity;
+import com.example.muahexanh_resigtration.entities.*;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
-import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
-import com.example.muahexanh_resigtration.repositories.ProjectRepository;
-import com.example.muahexanh_resigtration.repositories.StudentRepository;
-import com.example.muahexanh_resigtration.repositories.UniversityRepository;
+import com.example.muahexanh_resigtration.repositories.*;
 import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.text.SimpleDateFormat;
 import java.util.stream.Collectors;
 
@@ -30,6 +21,7 @@ public class ProjectService implements iProjectService {
     private final CommunityLeaderRepository communityLeaderRepository;
     private final UniversityRepository universityRepository;
     private final StudentRepository studentRepository;
+    private final StudentResigtrationRepository studentResigtrationRepository;
 
     @Override
     public ProjectEntity insertProject(ProjectDTO projectDTO) throws ParseException {
@@ -83,9 +75,6 @@ public class ProjectService implements iProjectService {
                     projectMap.put("dateStart", project.getDateStart());
                     projectMap.put("dateEnd", project.getDateEnd());
                     projectMap.put("imgRoot", project.getImgRoot());
-                    projectMap.put("students", project.getStudents().stream()
-                            .map(StudentEntity::getId)
-                            .collect(Collectors.toList()));
                     return projectMap;
                 })
                 .collect(Collectors.toList());
@@ -104,7 +93,7 @@ public class ProjectService implements iProjectService {
 
     @Override
     public List<ProjectEntity> getProjectByStudentId(long studentId) throws Exception {
-        Optional<List<ProjectEntity>> projects = projectRepository.findByStudentId(studentId);
+        Optional<List<ProjectEntity>> projects = studentResigtrationRepository.findAllProjectOfStudent(studentId);
         if (projects.isEmpty()) {
             throw new Exception("Project of student not found");
         }
@@ -119,19 +108,10 @@ public class ProjectService implements iProjectService {
                     "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
         }
 
-        Optional<ProjectEntity> projectOptional = projectRepository.findById(projectId);
-        if (projectOptional.isPresent()) {
+        Optional<ProjectEntity> projectOptional = studentResigtrationRepository.findAllProjectByID(projectId);
+        Optional< List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentOfProject(projectId);
 
-            List<Map<String, Object>> studentsInfo = projectOptional.get().getStudents().stream()
-                    .map(student -> {
-                        Map<String, Object> studentMap = new HashMap<>();
-                        studentMap.put("id", student.getId());
-                        studentMap.put("address", student.getAddress());
-                        studentMap.put("phone_number", student.getPhoneNumber());
-                        studentMap.put("full_name", student.getFullName());
-                        return studentMap;
-                    })
-                    .toList();
+        if (projectOptional.isPresent()) {
 
             Map<String, Object> projectMap = new HashMap<>();
             projectMap.put("id", projectOptional.get().getId());
@@ -143,7 +123,7 @@ public class ProjectService implements iProjectService {
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());
-            projectMap.put("students", studentsInfo);
+            projectMap.put("students", studentsOptional);
             return projectMap;
         } else {
             throw new DataNotFoundException(
@@ -216,7 +196,7 @@ public class ProjectService implements iProjectService {
 
     @Override
     public List<StudentEntity> findAllStudentOfProject(Long projectId) throws Exception {
-        Optional<List<StudentEntity>> optionalStudentsOfProject = projectRepository.findAllStudentOfProject(projectId);
+        Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository.findAllStudentOfProject(projectId);
         if(optionalStudentsOfProject.isPresent()){
             return optionalStudentsOfProject.get();
         }else {
@@ -225,35 +205,31 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public void rejectStudentByAddress(Long projectId,String address) throws Exception{
-        // Filter students based on the provided address
-        List<StudentEntity> studentsWithAddress = studentRepository.findByAddressContaining(address);
+    public void rejectStudentByID(Long projectId,Long studentId) throws Exception {
+        StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId);
+        Optional< List<StudentEntity> > optionalStudents = studentResigtrationRepository.findAllStudentOfProject(projectId);
+        if (project != null && optionalStudents.isPresent()) {
+            List<StudentEntity> studentsOfProject = optionalStudents.orElse(new ArrayList<>());
 
-        // Check if studentsWithAddress is not empty
-        if (!studentsWithAddress.isEmpty()) {
-            // Retrieve the project entity
-            Optional<ProjectEntity> optionalProject = projectRepository.findById(projectId);
+            // Tìm sinh viên cần xóa từ danh sách sinh viên của dự án
+            Optional<StudentEntity> studentToRemove = studentsOfProject.stream()
+                    .filter(student -> student.getId().equals(studentId))
+                    .findFirst();
 
-            if (optionalProject.isPresent()) {
-                ProjectEntity project = optionalProject.get();
-
-                // Update the students associated with the project
-                project.setStudents(studentsWithAddress);
-
-                // Save the updated project entity
-                projectRepository.save(project);
+            // Kiểm tra xem sinh viên có tồn tại trong danh sách sinh viên của dự án không
+            if (studentToRemove.isPresent()) {
+                // Xóa sinh viên khỏi danh sách sinh viên của dự án
+                studentResigtrationRepository.deleteByStudentIdAndProjectId(projectId,studentId);
             } else {
-                throw new DataNotFoundException("Project not found with ID: " + projectId);
+                throw new Exception("Student does not exist in the project.");
             }
         } else {
-            throw new DataNotFoundException("No students found with the provided address: " + address);
+            throw new Exception("Project does not exist.");
         }
     }
-
-
     @Override
     public List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId,String address) throws Exception{
-        Optional<List<StudentEntity>> optionalStudentsOfProject = projectRepository.findAllStudentOfProject(projectId);
+        Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository.findAllStudentOfProject(projectId);
         if(optionalStudentsOfProject.isPresent()){
             // Get the list of students associated with the project
             List<StudentEntity> studentsOfProject = optionalStudentsOfProject.get();

@@ -32,7 +32,8 @@ public interface iProjectService {
 
     List<StudentEntity> findAllStudentOfProject(Long projectId) throws Exception ;
 
-    void rejectStudentByAddress(Long projectId,String address) throws Exception;
 
     List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId,String address) throws Exception;
+
+    void rejectStudentByID(Long projectId,Long studentId) throws Exception;
 }
