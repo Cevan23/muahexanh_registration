@@ -1,8 +1,8 @@
 package com.example.muahexanh_resigtration.services.University;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
+import com.example.muahexanh_resigtration.dtos.UniversityDTO;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,8 @@ public interface iUniversityService {
     void addProjectsToUniversity(Long universityId, List<Long> projectIds) throws Exception;
 
     void addProjectToUniversity(Long universityId, Long projectId) throws Exception;
-    UniversityEntity addUniversity(UniversityEntity university);
+
+    UniversityEntity insertUniversity(UniversityDTO university) throws Exception;
 
     Optional<UniversityEntity> getUniversityById(Long id);
 
