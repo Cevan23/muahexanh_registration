@@ -17,7 +17,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/university")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UniversityController {
 
     private final iUniversityService universityService;

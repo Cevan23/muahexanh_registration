@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/communityleader")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
     @GetMapping("/search/{id}/{title}")

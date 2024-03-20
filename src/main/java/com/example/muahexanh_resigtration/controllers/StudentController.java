@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentController {
     private final iStudentService StudentService;
 

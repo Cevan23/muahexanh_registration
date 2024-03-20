@@ -132,7 +132,7 @@ public class ProjectService implements iProjectService {
             projectMap.put("description", projectOptional.get().getDescription());
             projectMap.put("address", projectOptional.get().getAddress());
             projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
-            projectMap.put("maximumSchools", projectOptional.get().getMaxSchoolRegistrations());
+            projectMap.put("maximumSchools", projectOptional.get().getMaxSchoolRegistrationMembers());
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());

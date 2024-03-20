@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admins")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AdministratorController {
     private final iAdministratorService AdministratorService;
 
