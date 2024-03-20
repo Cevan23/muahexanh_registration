@@ -5,6 +5,7 @@ import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface iCommunityLeaderService {
     void deleteCommunityLeader(Long id) throws Exception;
 
     CommunityLeaderResponseUser loginCommunityLeader(LoginDTO loginDTO) throws Exception;
+
+    CommunityLeaderEntity findCommunityLeaderByEmail(String email) throws Exception;
 }

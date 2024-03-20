@@ -67,7 +67,7 @@ public class UniversityController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            UniversityEntity universityEntity = universityService.insertUniversity(universityDTO);
+            universityService.insertUniversity(universityDTO);
 
             return ResponseEntity.ok(
                     ResponseObject.builder()

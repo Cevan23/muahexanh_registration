@@ -1,10 +1,9 @@
 package com.example.muahexanh_resigtration.controllers;
 
+import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
-import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
-import com.example.muahexanh_resigtration.responses.Project.ProjectResponse;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import jakarta.validation.Valid;
@@ -77,6 +76,41 @@ public class CommunityLeaderController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> insertCommunityLeader(@Valid @RequestBody CommunityLeaderDTO communityLeaderDTO, BindingResult result) {
+        try {
+            if (result.hasErrors()) {
+                List<String> errorMessages = result.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errorMessages);
+            }
+
+            communityLeaderService.insertCommunityLeader(communityLeaderDTO);
+
+            return ResponseEntity.ok(
+                    ResponseObject
+                            .builder()
+                            .status(HttpStatus.OK)
+                            .message("Insert community leader successfully")
+                            .data(null)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    ResponseObject
+                            .builder()
+                            .data(null)
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(e.getMessage())
+                            .build()
+            );
+        }
+
+
+
     }
 
 //    @PostMapping("/createProject")
