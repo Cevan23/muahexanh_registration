@@ -19,8 +19,8 @@ import java.util.*;
 @AllArgsConstructor
 public class UniversityService implements iUniversityService {
 
-    @Autowired
-    private UniversityRepository universityRepository;
+
+    private final UniversityRepository universityRepository;
     private final iProjectService projectService;
     private final ProjectRepository projectRepository;
     private final BCryptPasswordEncoder passwordEncoder;
