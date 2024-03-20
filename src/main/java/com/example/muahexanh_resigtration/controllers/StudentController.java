@@ -1,14 +1,14 @@
 package com.example.muahexanh_resigtration.controllers;
 
-import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.StudentDTO;
-import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
-import com.example.muahexanh_resigtration.responses.Project.ProjectListResponse;
+import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
 import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
 import com.example.muahexanh_resigtration.services.Student.iStudentService;
+import com.example.muahexanh_resigtration.services.University.UniversityService;
+import com.example.muahexanh_resigtration.services.University.iUniversityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,18 +18,18 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
 public class StudentController {
     private final iStudentService StudentService;
-
+    private final iUniversityService UniversityService;
     @PostMapping("")
     public ResponseEntity<?> insertStudent(
             @Valid @RequestBody StudentDTO StudentDTO,
-            BindingResult result
-    ) {
+            BindingResult result) {
         try {
             if (result.hasErrors()) {
                 List<String> errorMessages = result.getFieldErrors()
@@ -84,8 +84,7 @@ public class StudentController {
     public ResponseEntity<?> updateStudent(
             @PathVariable Long id,
             @Valid @RequestBody StudentDTO StudentDTO,
-            BindingResult result
-    ) {
+            BindingResult result) {
         try {
             if (result.hasErrors()) {
                 List<String> errorMessages = result.getFieldErrors()
@@ -103,6 +102,51 @@ public class StudentController {
                             .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filter/{address}")
+    public ResponseEntity<?> getAllStudentFilterByAddress(@PathVariable String address) {
+        try {
+            Map<String, Object> studentMap = StudentService.getAllStudentContainAddress(address);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .data(studentMap)
+                            .message("Get student by containing address successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/applyProject")
+    public String applyProject(@Valid @RequestBody Map<String, String> requestBody) {
+        String studentId = requestBody.get("studentId");
+        String projectId = requestBody.get("projectId");
+
+        try {
+            StudentService.applyProject(Long.parseLong(studentId), Long.parseLong(projectId));
+            return "Apply project successfully";
+        } catch (Exception e) {
+            return "Can not apply project: " + e.getMessage();
+        }
+    }
+    @GetMapping("/universityApprovedProject")
+    public ResponseEntity<?> getAllUniversityName(@Valid @RequestParam("projectId") String projectId)
+    {
+        try {
+            List<String> universityApprovedProject = UniversityService.getAllUniversityNameOfProject(Long.parseLong(projectId));
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(universityApprovedProject)
+                    .message("Get All Universities Name Approved Project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ResponseObject.builder()
+                    .message("An error occurred: " + e.getMessage())
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build());
         }
     }
 }

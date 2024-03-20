@@ -4,11 +4,14 @@ import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
+import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
+import com.example.muahexanh_resigtration.repositories.StudentRepository;
+import com.example.muahexanh_resigtration.repositories.UniversityRepository;
+import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -25,6 +28,8 @@ public class ProjectService implements iProjectService {
 
     private final ProjectRepository projectRepository;
     private final CommunityLeaderRepository communityLeaderRepository;
+    private final UniversityRepository universityRepository;
+    private final StudentRepository studentRepository;
 
     @Override
     public ProjectEntity insertProject(ProjectDTO projectDTO) throws ParseException {
@@ -55,9 +60,9 @@ public class ProjectService implements iProjectService {
 
     @Override
     public ProjectEntity getProjectById(long id) throws Exception {
-        Optional<ProjectEntity> optionalProduct = projectRepository.getDetailProject(id);
-        if (optionalProduct.isPresent()) {
-            return optionalProduct.get();
+        Optional<ProjectEntity> optionalProject = projectRepository.getDetailProject(id);
+        if (optionalProject.isPresent()) {
+            return optionalProject.get();
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
     }
@@ -73,7 +78,7 @@ public class ProjectService implements iProjectService {
                     projectMap.put("description", project.getDescription());
                     projectMap.put("address", project.getAddress());
                     projectMap.put("maximumStudents", project.getMaxProjectMembers());
-                    projectMap.put("maximumSchools", project.getMaxSchoolRegistrationMembers());
+                    projectMap.put("maximumSchoolsRegistrationMembers", project.getMaxSchoolRegistrationMembers());
                     projectMap.put("status", project.getStatus());
                     projectMap.put("dateStart", project.getDateStart());
                     projectMap.put("dateEnd", project.getDateEnd());
@@ -88,7 +93,8 @@ public class ProjectService implements iProjectService {
 
     @Override
     public List<ProjectEntity> getAllProjectByLeaderId(long id) throws Exception {
-        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(id);
+        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository
+                .getDetailCommunityLeader(id);
         if (communityLeaderOptional.isPresent()) {
             return communityLeaderOptional.get().getProjects();
         } else {
@@ -109,9 +115,10 @@ public class ProjectService implements iProjectService {
     public Map<String, Object> getProjectByLeaderIdAndProjectId(long leaderId, long projectId) throws Exception {
         if (leaderId == 0 || projectId == 0) {
             // Handle the case where leaderId or projectId is 0
-            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
         }
-        Optional<CommunityLeaderEntity> communityLeaderOptional = communityLeaderRepository.getDetailCommunityLeader(leaderId);
+
         Optional<ProjectEntity> projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isPresent()) {
 
@@ -132,14 +139,15 @@ public class ProjectService implements iProjectService {
             projectMap.put("description", projectOptional.get().getDescription());
             projectMap.put("address", projectOptional.get().getAddress());
             projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
-            projectMap.put("maximumSchools", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("maximumSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());
             projectMap.put("students", studentsInfo);
             return projectMap;
         } else {
-            throw new DataNotFoundException("Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
         }
     }
 
@@ -183,7 +191,91 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
+    public List<ProjectEntity> getProjectByUniversityId(long universityId) throws Exception {
+        if (universityId == 0) {
+            // Handle the case where leaderId or projectId is 0
+            throw new DataNotFoundException("Cannot find project with universityId: " + universityId);
+        }
+        Optional<UniversityEntity> universityEntityOptional = universityRepository.findById(universityId);
+        if (universityEntityOptional.isPresent()) {
+            List<ProjectEntity> listProject = universityEntityOptional.get().getProjects();
+            if(listProject.isEmpty()){
+                throw new DataNotFoundException("Cannot find project with universityId: " + universityId);
+            }else {
+                return listProject;
+            }
+        } else {
+            throw new DataNotFoundException("Cannot find university with universityId: " + universityId);
+        }
+    }
+
+    @Override
     public void deleteProject(long id) {
 
+    }
+
+    @Override
+    public List<StudentEntity> findAllStudentOfProject(Long projectId) throws Exception {
+        Optional<List<StudentEntity>> optionalStudentsOfProject = projectRepository.findAllStudentOfProject(projectId);
+        if(optionalStudentsOfProject.isPresent()){
+            return optionalStudentsOfProject.get();
+        }else {
+            throw new DataNotFoundException("No students found for project with ID: " + projectId);
+        }
+    }
+
+    @Override
+    public void rejectStudentByAddress(Long projectId,String address) throws Exception{
+        // Filter students based on the provided address
+        List<StudentEntity> studentsWithAddress = studentRepository.findByAddressContaining(address);
+
+        // Check if studentsWithAddress is not empty
+        if (!studentsWithAddress.isEmpty()) {
+            // Retrieve the project entity
+            Optional<ProjectEntity> optionalProject = projectRepository.findById(projectId);
+
+            if (optionalProject.isPresent()) {
+                ProjectEntity project = optionalProject.get();
+
+                // Update the students associated with the project
+                project.setStudents(studentsWithAddress);
+
+                // Save the updated project entity
+                projectRepository.save(project);
+            } else {
+                throw new DataNotFoundException("Project not found with ID: " + projectId);
+            }
+        } else {
+            throw new DataNotFoundException("No students found with the provided address: " + address);
+        }
+    }
+
+
+    @Override
+    public List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId,String address) throws Exception{
+        Optional<List<StudentEntity>> optionalStudentsOfProject = projectRepository.findAllStudentOfProject(projectId);
+        if(optionalStudentsOfProject.isPresent()){
+            // Get the list of students associated with the project
+            List<StudentEntity> studentsOfProject = optionalStudentsOfProject.get();
+
+            // Filter students based on the provided address
+            List<StudentEntity> studentsWithAddress = studentRepository.findByAddressContaining(address);
+            // Exclude students from studentsOfProject that are also in studentsWithAddress
+            studentsOfProject.removeAll(studentsWithAddress);
+            return studentsOfProject;
+        }else {
+            throw new DataNotFoundException("No students found for project with ID: " + projectId);
+        }
+    }
+    @Override
+    public ProjectEntity updateProjectDone(long id) throws Exception {
+        Optional<ProjectEntity> optionalProject = projectRepository.findById(id);
+        if (optionalProject.isPresent()) {
+            ProjectEntity existingProject = optionalProject.get();
+            if (existingProject.getStatus() != null)
+                existingProject.setStatus("done");
+            return projectRepository.save(existingProject);
+        }
+        throw new DataNotFoundException("Cannot find project with id =" + id);
     }
 }

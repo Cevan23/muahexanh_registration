@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 
 @Repository
 public interface CommunityLeaderRepository extends JpaRepository<CommunityLeaderEntity, Long> {
@@ -28,6 +27,11 @@ public interface CommunityLeaderRepository extends JpaRepository<CommunityLeader
             "JOIN c.projects p " +
             "WHERE c.id = :communityLeaderId AND p.status = :status")
     List<ProjectEntity> getProjectsByLeaderIDAndStatus(@Param("communityLeaderId") Long communityLeaderId, @Param("status") String status);
+
+    @Query("SELECT c FROM CommunityLeaderEntity c WHERE c.email = :email" +
+            " AND c.password = :password")
+    Optional<CommunityLeaderEntity> loginCommunityLeader(@Param("email") String email,
+                                         @Param("password") String password);
 
     Optional<CommunityLeaderEntity> findByEmail(String email);
 }

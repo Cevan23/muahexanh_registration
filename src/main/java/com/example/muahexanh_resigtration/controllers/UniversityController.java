@@ -4,6 +4,7 @@ import com.example.muahexanh_resigtration.dtos.UniversityProjectRequest;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
 
 import com.example.muahexanh_resigtration.services.University.iUniversityService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,28 +12,41 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping("/api/university")
 @RequiredArgsConstructor
 public class UniversityController {
-
     private final iUniversityService universityService;
     @PostMapping("/universities/projects")
-    public ResponseEntity<?> addProjectsToUniversity(@RequestBody UniversityProjectRequest request) throws Exception {
-        Long universityId = request.getUniversityId();
-        List<Long> projectIds = request.getProjectIds();
+    public String addProjectsToUniversity(@Valid @RequestBody Map<String, List<String> > requestBody) throws Exception {
+        String universityId = requestBody.get("universityId").get(0);
+        List<String> projectIdsAsString = requestBody.get("projectIds");
         try {
-             universityService.addProjectsToUniversity(universityId,projectIds);
-            return ResponseEntity.ok("University added Project successfully");
+            List<Long> projectIds = projectIdsAsString.stream()
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+             universityService.addProjectsToUniversity(Long.parseLong(universityId), projectIds);
+            return"University added Project successfully";
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return  "Can not apply project: " + e.getMessage();
         }
+    }
 
-
-
+    @PostMapping("/applyProject")
+    public String addProjectToUniversity(@Valid @RequestBody Map<String, String > requestBody) throws Exception {
+        String universityId = requestBody.get("universityId");
+        String projectIdsAsString = requestBody.get("projectId");
+        try {
+            universityService.addProjectToUniversity(Long.parseLong(universityId), Long.parseLong(projectIdsAsString) );
+            return"University added Project successfully";
+        } catch (Exception e) {
+            return  "Can not apply project: " + e.getMessage();
+        }
     }
 
     @PostMapping("/creatUniversities")

@@ -8,8 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommunityLeaderDTO extends UserDTO {
 
     @JsonProperty("projects")

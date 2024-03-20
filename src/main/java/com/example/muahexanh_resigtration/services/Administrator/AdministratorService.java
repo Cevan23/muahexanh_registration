@@ -2,9 +2,7 @@ package com.example.muahexanh_resigtration.services.Administrator;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.AdministratorDTO;
-import com.example.muahexanh_resigtration.dtos.StudentDTO;
 import com.example.muahexanh_resigtration.entities.AdministratorEntity;
-import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.AdministratorRepository;
 import lombok.AllArgsConstructor;
@@ -31,6 +29,7 @@ public class AdministratorService implements iAdministratorService {
                 .phoneNumber(AdministratorDTO.getPhoneNumber())
                 .role("Administrator")
                 .build();
+                
         return administratorRepository.save(newAdministrator);
     }
 
@@ -58,7 +57,7 @@ public class AdministratorService implements iAdministratorService {
             administratorEntity.setFullName(AdministratorDTO.getFullName());
         }
         if (AdministratorDTO.getPassword() != null) {
-            administratorEntity.setPassword(AdministratorDTO.getPassword());
+            administratorEntity.setPassword(passwordEncoder.encode(AdministratorDTO.getPassword()));
         }
         if (AdministratorDTO.getPhoneNumber() != null) {
             administratorEntity.setPhoneNumber(AdministratorDTO.getPhoneNumber());
