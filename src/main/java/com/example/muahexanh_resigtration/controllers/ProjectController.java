@@ -111,7 +111,12 @@ public class ProjectController {
                             .status(HttpStatus.OK)
                             .build());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .data(null)
+                            .message(e.getMessage())
+                            .status(HttpStatus.BAD_REQUEST)
+                            .build());
         }
     }
 
@@ -122,7 +127,7 @@ public class ProjectController {
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .data(ProjectListResponse.fromListProject(projectResponses))
-                            .message("Get all project of student successfully")
+                            .message("Get all project of university successfully")
                             .status(HttpStatus.OK)
                             .build());
         } catch (Exception e) {

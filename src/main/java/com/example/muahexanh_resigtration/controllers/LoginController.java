@@ -32,6 +32,8 @@ public class LoginController {
     @PostMapping("")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
         String role = loginDTO.getRole();
+        Map<String, Object> dataMap = new HashMap<>();
+
 
         switch (role) {
             case "student":
@@ -51,9 +53,18 @@ public class LoginController {
                 // Attempt to login as a university
                 try {
                     UniversityEntity university = universityService.loginUniversity(loginDTO);
+
+                    dataMap.clear();
+                    dataMap.put("fullName", university.getFullName());
+                    dataMap.put("email", university.getEmail());
+                    dataMap.put("phoneNumber", university.getPhoneNumber());
+                    dataMap.put("role", university.getRole());
+                    dataMap.put("id", university.getId());
+                    dataMap.put("universityName", university.getUniversityName());
+
                     return ResponseEntity.ok(
                             ResponseObject.builder()
-                                    .data(university)
+                                    .data(dataMap)
                                     .message("Login successfully as a university")
                                     .status(HttpStatus.OK)
                                     .build());
@@ -65,7 +76,8 @@ public class LoginController {
 
                 try {
                     CommunityLeaderResponseUser communityLeader = communityLeaderService.loginCommunityLeader(loginDTO);
-                    Map<String, Object> dataMap = new HashMap<>();
+
+                    dataMap.clear();
                     dataMap.put("fullName", communityLeader.getFullName());
                     dataMap.put("email", communityLeader.getEmail());
                     dataMap.put("phoneNumber", communityLeader.getPhoneNumber());
