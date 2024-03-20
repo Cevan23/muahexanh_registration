@@ -2,6 +2,7 @@ package com.example.muahexanh_resigtration.services.CommunityLeader;
 
 import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
+import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
@@ -24,6 +25,8 @@ public interface iCommunityLeaderService {
     void deleteCommunityLeader(Long id) throws Exception;
 
     CommunityLeaderResponseUser loginCommunityLeader(LoginDTO loginDTO) throws Exception;
+
+    CommunityLeaderEntity createProjectOfComCommunityLeader(Long communityLeaderId, ProjectDTO project ) throws Exception;
 
     CommunityLeaderEntity findCommunityLeaderByEmail(String email) throws Exception;
 }
