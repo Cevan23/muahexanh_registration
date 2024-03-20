@@ -22,7 +22,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/communityleader")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
 

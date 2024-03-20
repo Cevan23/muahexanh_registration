@@ -1,16 +1,24 @@
 package com.example.muahexanh_resigtration.controllers;
 
+import com.example.muahexanh_resigtration.dtos.UniversityDTO;
 import com.example.muahexanh_resigtration.dtos.UniversityProjectRequest;
+import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
 
+import com.example.muahexanh_resigtration.responses.ResponseObject;
+import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
+import com.example.muahexanh_resigtration.responses.University.UniversityResponse;
 import com.example.muahexanh_resigtration.services.University.iUniversityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,9 +28,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/university")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UniversityController {
-
     private final iUniversityService universityService;
     @PostMapping("/universities/projects")
     public String addProjectsToUniversity(@Valid @RequestBody Map<String, List<String> > requestBody) throws Exception {
@@ -51,10 +57,27 @@ public class UniversityController {
         }
     }
 
-    @PostMapping("/creatUniversities")
-    public ResponseEntity<String> addUniversity(@RequestBody UniversityEntity university) {
-        universityService.addUniversity(university);
-        return ResponseEntity.ok("University added successfully");
+    @PostMapping("")
+    public ResponseEntity<?> insertUniversity(@RequestBody UniversityDTO universityDTO, BindingResult result) {
+        try {
+            if (result.hasErrors()) {
+                List<String> errorMessages = result.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errorMessages);
+            }
+            UniversityEntity universityEntity = universityService.insertUniversity(universityDTO);
+
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .data(null)
+                            .message("Create university successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/updateUniversities/{id}")

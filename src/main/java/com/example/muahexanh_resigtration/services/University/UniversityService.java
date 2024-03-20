@@ -1,6 +1,7 @@
 package com.example.muahexanh_resigtration.services.University;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
+import com.example.muahexanh_resigtration.dtos.UniversityDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
@@ -11,26 +12,25 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class UniversityService implements iUniversityService{
+public class UniversityService implements iUniversityService {
 
     @Autowired
     private UniversityRepository universityRepository;
     private final iProjectService projectService;
     private final ProjectRepository projectRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public void addProjectsToUniversity(Long universityId, List<Long> projectIds) throws Exception {
 
         UniversityEntity university = universityRepository.findById(universityId).orElse(null);
         if (university == null) {
-            throw new DataNotFoundException("University not found"+ universityId);
+            throw new DataNotFoundException("University not found" + universityId);
         }
 
         // Check for duplicate projectIds
@@ -69,7 +69,7 @@ public class UniversityService implements iUniversityService{
 
         UniversityEntity university = universityRepository.findById(universityId).orElse(null);
         if (university == null) {
-            throw new DataNotFoundException("University not found"+ universityId);
+            throw new DataNotFoundException("University not found" + universityId);
         }
         Optional<ProjectEntity> project = projectRepository.findById(projectId);
         if (project.isEmpty()) {
@@ -84,8 +84,27 @@ public class UniversityService implements iUniversityService{
     }
 
     @Override
-    public UniversityEntity addUniversity(UniversityEntity university) {
-        return universityRepository.save(university);
+    public UniversityEntity insertUniversity(UniversityDTO universityDTO) throws Exception {
+        Optional<UniversityEntity> existingUniversity = universityRepository.findByEmail(universityDTO.getEmail());
+        if (existingUniversity.isPresent()) {
+            throw new Exception("Email already exists");
+        }
+
+        UniversityEntity newUniversity = UniversityEntity
+                .builder()
+                .email(universityDTO.getEmail())
+                .fullName(universityDTO.getFullName())
+                .password(passwordEncoder.encode(universityDTO.getPassword()))
+                .phoneNumber(universityDTO.getPhoneNumber())
+                .role(universityDTO.getRole())
+                .universityName(universityDTO.getUniversityName())
+                .build();
+
+        if (newUniversity == null) {
+            throw new Exception("Cannot create student");
+        }
+
+        return universityRepository.save(newUniversity);
     }
 
     @Override
@@ -128,4 +147,23 @@ public class UniversityService implements iUniversityService{
         return university.get();
     }
 
+    @Override
+    public List<String> getAllUniversityNameOfProject(Long projectId) throws Exception {
+        List<String> optionalUniversityApprovedProject = universityRepository.getAllUniversityNameOfProject(projectId);
+        if (!optionalUniversityApprovedProject.isEmpty()) {
+            // Create a list to store UniversityEntity objects
+            List<String> universities = new ArrayList<>();
+
+            // Iterate over the list of university names and create UniversityEntity objects
+            for (String universityName : optionalUniversityApprovedProject) {
+                UniversityEntity university = new UniversityEntity();
+                university.setUniversityName(universityName);
+                universities.add(university.getUniversityName());
+            }
+
+            return universities;
+        } else {
+            throw new DataNotFoundException("No universities approved for project with ID: " + projectId);
+        }
+    }
 }

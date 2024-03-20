@@ -2,10 +2,13 @@ package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.StudentDTO;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
+import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
 import com.example.muahexanh_resigtration.responses.Student.StudentResponse;
 import com.example.muahexanh_resigtration.services.Student.iStudentService;
+import com.example.muahexanh_resigtration.services.University.UniversityService;
+import com.example.muahexanh_resigtration.services.University.iUniversityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,10 +23,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentController {
     private final iStudentService StudentService;
-
+    private final iUniversityService UniversityService;
     @PostMapping("")
     public ResponseEntity<?> insertStudent(
             @Valid @RequestBody StudentDTO StudentDTO,
@@ -130,5 +132,21 @@ public class StudentController {
             return "Can not apply project: " + e.getMessage();
         }
     }
-
+    @GetMapping("/universityApprovedProject")
+    public ResponseEntity<?> getAllUniversityName(@Valid @RequestParam("projectId") String projectId)
+    {
+        try {
+            List<String> universityApprovedProject = UniversityService.getAllUniversityNameOfProject(Long.parseLong(projectId));
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(universityApprovedProject)
+                    .message("Get All Universities Name Approved Project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ResponseObject.builder()
+                    .message("An error occurred: " + e.getMessage())
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build());
+        }
+    }
 }

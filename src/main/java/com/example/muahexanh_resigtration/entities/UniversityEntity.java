@@ -1,6 +1,8 @@
 package com.example.muahexanh_resigtration.entities;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 import java.util.List;
 
 
@@ -9,14 +11,13 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "universities")
 public class UniversityEntity extends UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @ManyToMany(targetEntity=ProjectEntity.class)
     private List<ProjectEntity> projects;

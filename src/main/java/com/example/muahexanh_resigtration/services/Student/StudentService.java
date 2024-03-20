@@ -4,11 +4,13 @@ import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.StudentDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
+
 import com.example.muahexanh_resigtration.entities.StudentsResigtrationEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import com.example.muahexanh_resigtration.repositories.StudentRepository;
 import com.example.muahexanh_resigtration.repositories.StudentResigtrationRepository;
+import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,10 @@ public class StudentService implements iStudentService {
     private final StudentRepository studentRepository;
     private final ProjectRepository projectRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
     private final StudentResigtrationRepository studentResigtrationRepository;
+    private final UniversityRepository universityRepository;
+
 
     @Override
     public StudentEntity insertStudent(StudentDTO StudentDTO) throws Exception {
@@ -173,5 +178,4 @@ public class StudentService implements iStudentService {
         }
 
     }
-
 }
