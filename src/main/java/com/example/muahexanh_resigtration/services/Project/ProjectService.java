@@ -78,7 +78,7 @@ public class ProjectService implements iProjectService {
                     projectMap.put("description", project.getDescription());
                     projectMap.put("address", project.getAddress());
                     projectMap.put("maximumStudents", project.getMaxProjectMembers());
-                    projectMap.put("maximumSchools", project.getMaxSchoolRegistrationMembers());
+                    projectMap.put("maximumSchoolsRegistrationMembers", project.getMaxSchoolRegistrationMembers());
                     projectMap.put("status", project.getStatus());
                     projectMap.put("dateStart", project.getDateStart());
                     projectMap.put("dateEnd", project.getDateEnd());
@@ -139,7 +139,7 @@ public class ProjectService implements iProjectService {
             projectMap.put("description", projectOptional.get().getDescription());
             projectMap.put("address", projectOptional.get().getAddress());
             projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
-            projectMap.put("maximumSchools", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("maximumSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());
