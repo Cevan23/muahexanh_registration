@@ -4,11 +4,13 @@ import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.StudentDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
-import com.example.muahexanh_resigtration.entities.UniversityEntity;
+
+import com.example.muahexanh_resigtration.entities.StudentsResigtrationEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import com.example.muahexanh_resigtration.repositories.StudentRepository;
-import com.example.muahexanh_resigtration.repositories.UniversityRepository;
+import com.example.muahexanh_resigtration.repositories.StudentResigtrationRepository;
+import com.example.muahexanh_resigtration.entities.UniversityEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,10 @@ public class StudentService implements iStudentService {
     private final StudentRepository studentRepository;
     private final ProjectRepository projectRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    private final StudentResigtrationRepository studentResigtrationRepository;
     private final UniversityRepository universityRepository;
+
 
     @Override
     public StudentEntity insertStudent(StudentDTO StudentDTO) throws Exception {
@@ -134,24 +139,43 @@ public class StudentService implements iStudentService {
     }
 
     public void applyProject(long studentId, long projectId) throws Exception {
-        Optional<StudentEntity> student = studentRepository.findById(studentId);
-        if (student.isEmpty()) {
-            throw new DataNotFoundException("Cannot find student with id = " + studentId);
-        }
-        Optional<ProjectEntity> project = projectRepository.findById(projectId);
-        if (project.isEmpty()) {
-            throw new DataNotFoundException("Cannot find project with id = " + projectId);
-        }
-        StudentEntity studentEntity = student.get();
-        ProjectEntity projectEntity = project.get();
+        Optional<StudentEntity> optionalStudent = studentRepository.findById(studentId);
+        Optional<Integer> optionalMaxSchoolRegistrationMembers = projectRepository.getmaxSchoolRegistrationMembers(projectId);
+        Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository.findAllStudentOfProject(projectId);
 
-        // Check if the student has already applied to the project
-        if (projectEntity.getStudents().contains(studentEntity)) {
-            throw new Exception(
-                    "Student has already applied to project");
+        if (optionalStudent.isPresent() && optionalMaxSchoolRegistrationMembers.isPresent() && optionalStudentsOfProject.isPresent()) {
+            StudentEntity student = optionalStudent.get();
+            Integer maxSchoolRegistrationMembers = optionalMaxSchoolRegistrationMembers.get();
+            List<StudentEntity> studentsOfProject = optionalStudentsOfProject.get();
+
+            // Kiểm tra xem sinh viên đã đăng kí cho dự án trước đó hay không
+            if (studentsOfProject.contains(student)) {
+                throw new Exception("Sinh viên đã đăng ký cho dự án này trước đó.");
+            }
+
+            // Đếm số lượng sinh viên của trường trong dự án
+            long numberOfStudentsFromSameUniversity = studentsOfProject.stream()
+                    .filter(s -> s.getUniversityName().equals(student.getUniversityName()))
+                    .count();
+
+            // Kiểm tra xem còn slot đăng kí trống hay không
+            if (numberOfStudentsFromSameUniversity < maxSchoolRegistrationMembers) {
+                Optional<ProjectEntity> optionalProject = projectRepository.findById(projectId);
+                if (optionalProject.isPresent()) {
+                    StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId);
+                    // Thêm sinh viên vào danh sách sinh viên của dự án
+                    project.setStudent(student);
+                    // Lưu cập nhật vào cơ sở dữ liệu
+                    studentResigtrationRepository.save(project);
+                } else {
+                    throw new Exception("Không tìm thấy dự án với ID đã cung cấp.");
+                }
+            } else {
+                throw new Exception("Số lượng sinh viên đã đạt tối đa cho trường này trong dự án này.");
+            }
+        } else {
+            throw new Exception("Không tìm thấy sinh viên hoặc dự án.");
         }
 
-        projectEntity.getStudents().add(studentEntity);
-        projectRepository.save(projectEntity);
     }
 }
