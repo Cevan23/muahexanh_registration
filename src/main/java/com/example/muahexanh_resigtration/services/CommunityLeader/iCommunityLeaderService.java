@@ -6,6 +6,7 @@ import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface iCommunityLeaderService {
     CommunityLeaderResponseUser loginCommunityLeader(LoginDTO loginDTO) throws Exception;
 
     CommunityLeaderEntity createProjectOfComCommunityLeader(Long communityLeaderId, ProjectDTO project ) throws Exception;
+
+    CommunityLeaderEntity findCommunityLeaderByEmail(String email) throws Exception;
 }

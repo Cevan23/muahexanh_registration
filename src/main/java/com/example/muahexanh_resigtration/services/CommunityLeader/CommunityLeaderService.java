@@ -14,6 +14,7 @@ import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLea
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -81,7 +82,6 @@ public class CommunityLeaderService implements iCommunityLeaderService {
                 .password(passwordEncoder.encode(communityLeaderDTO.getPassword()))
                 .phoneNumber(communityLeaderDTO.getPhoneNumber())
                 .role("CommunityLeader")
-                .projects(communityLeaderDTO.getProjects())
                 .build();
 
         return communityLeaderRepository.save(newCommunityLeader);
@@ -110,9 +110,6 @@ public class CommunityLeaderService implements iCommunityLeaderService {
             communityLeaderEntity.setPhoneNumber(communityLeaderDTO.getPhoneNumber());
         }
 
-        if (communityLeaderDTO.getProjects() != null) {
-            communityLeaderEntity.setProjects(communityLeaderDTO.getProjects());
-        }
         return communityLeaderRepository.save(communityLeaderEntity);
     }
 
@@ -186,6 +183,15 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         // Nếu không tìm thấy community leader với id tương ứng
             throw new IllegalArgumentException("Community leader not found with ID: " + communityLeaderId);
         }
+    }
+
+    @Override
+    public CommunityLeaderEntity findCommunityLeaderByEmail(String email) throws Exception {
+        Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository.findByEmail(email);
+
+        if(optionalCommunityLeader.isEmpty()) throw new DataNotFoundException("Community leader does not exist");
+
+        return optionalCommunityLeader.get();
     }
 
 }
