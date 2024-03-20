@@ -149,7 +149,7 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository.getDetailCommunityLeader(communityLeaderId);
         if (optionalCommunityLeader.isPresent()) {
             CommunityLeaderEntity communityLeader = optionalCommunityLeader.get();
-            SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             java.sql.Date sqlDateStart, sqlDateEnd;
             java.util.Date parsed = format.parse(projectDTO.getDateStart());
             sqlDateStart = new java.sql.Date(parsed.getTime());
