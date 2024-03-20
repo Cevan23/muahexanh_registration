@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UniversityController {
-
     private final iUniversityService universityService;
     @PostMapping("/universities/projects")
     public String addProjectsToUniversity(@Valid @RequestBody Map<String, List<String> > requestBody) throws Exception {

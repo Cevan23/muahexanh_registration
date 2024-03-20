@@ -17,6 +17,7 @@ public interface iUniversityService {
     Optional<UniversityEntity> getUniversityById(Long id);
 
     List<UniversityEntity> getAllUniversities();
+    List<String> getAllUniversityNameOfProject(Long projectId) throws Exception;
 
     UniversityEntity updateUniversity(Long id, UniversityEntity updatedUniversity);
 

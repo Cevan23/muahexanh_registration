@@ -13,9 +13,8 @@ public interface AdministratorRepository extends JpaRepository<AdministratorEnti
     @Query("SELECT a FROM AdministratorEntity a WHERE a.id = :adminId")
     Optional<AdministratorEntity> getAdministratorById(@Param("adminId") Long adminId);
 
-    @Query("SELECT a FROM AdministratorEntity a WHERE a.email = :email" +
-            " AND a.password = :password")
-    Optional<AdministratorEntity> loginAdministrator(@Param("email") String email,
-                                         @Param("password") String password);
+    @Query("SELECT a FROM AdministratorEntity a WHERE a.email = :email AND a.password = :password")
+    Optional<AdministratorEntity> loginAdministrator(@Param("email") String email, @Param("password") String password);
+
     Optional<AdministratorEntity> findByEmail(String email);
 }

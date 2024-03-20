@@ -11,10 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -128,4 +126,23 @@ public class UniversityService implements iUniversityService{
         return university.get();
     }
 
+    @Override
+    public List<String> getAllUniversityNameOfProject(Long projectId) throws Exception {
+        List<String> optionalUniversityApprovedProject = universityRepository.getAllUniversityNameOfProject(projectId);
+        if(!optionalUniversityApprovedProject.isEmpty()){
+            // Create a list to store UniversityEntity objects
+            List<String> universities = new ArrayList<>();
+
+            // Iterate over the list of university names and create UniversityEntity objects
+            for (String universityName : optionalUniversityApprovedProject) {
+                UniversityEntity university = new UniversityEntity();
+                university.setUniversityName(universityName);
+                universities.add(university.getUniversityName());
+            }
+
+            return universities;
+        }else {
+            throw new DataNotFoundException("No universities approved for project with ID: " + projectId);
+        }
+    }
 }
