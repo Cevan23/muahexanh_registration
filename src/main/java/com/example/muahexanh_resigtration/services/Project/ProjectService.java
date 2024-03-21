@@ -51,10 +51,16 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public ProjectEntity getProjectById(long id) throws Exception {
+    public Map<String, Object> getProjectById(long id) throws Exception {
         Optional<ProjectEntity> optionalProject = projectRepository.getDetailProject(id);
+        Optional<CommunityLeaderEntity> optionalCommunityLeader = projectRepository.getCommunityLeaderByProjectId(id);
         if (optionalProject.isPresent()) {
-            return optionalProject.get();
+            Map<String, Object> projectMap = new HashMap<>();
+            projectMap.put("number_of_student", studentResigtrationRepository.findAllStudentOfProject(id).get().size());
+            projectMap.put("projectInformation", optionalProject.get());
+            projectMap.put("leader_name", optionalCommunityLeader.get().getFullName());
+            projectMap.put("leader_contact", optionalCommunityLeader.get().getPhoneNumber());
+            return projectMap;
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
     }
