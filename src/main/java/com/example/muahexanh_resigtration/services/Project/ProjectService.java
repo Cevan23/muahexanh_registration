@@ -4,7 +4,6 @@ import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.*;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.*;
-import com.example.muahexanh_resigtration.responses.Student.StudentListResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -51,10 +50,16 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public ProjectEntity getProjectById(long id) throws Exception {
+    public Map<String, Object> getProjectById(long id) throws Exception {
         Optional<ProjectEntity> optionalProject = projectRepository.getDetailProject(id);
+        Optional<CommunityLeaderEntity> optionalCommunityLeader = projectRepository.getCommunityLeaderByProjectId(id);
         if (optionalProject.isPresent()) {
-            return optionalProject.get();
+            Map<String, Object> projectMap = new HashMap<>();
+            projectMap.put("number_of_student", studentResigtrationRepository.findAllStudentOfProject(id).get().size());
+            projectMap.put("projectInformation", optionalProject.get());
+            projectMap.put("leader_name", optionalCommunityLeader.get().getFullName());
+            projectMap.put("leader_contact", optionalCommunityLeader.get().getPhoneNumber());
+            return projectMap;
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
     }
@@ -108,8 +113,8 @@ public class ProjectService implements iProjectService {
                     "Cannot find project with leaderID haha: " + leaderId + " projectId: " + projectId);
         }
 
-        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,projectId);
-        Optional< List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentOfProject(projectId);
+        Optional<ProjectEntity> projectOptional = studentResigtrationRepository.findAllProjectByID(projectId);
+        Optional<List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentOfProject(projectId);
 
         if (projectOptional.isPresent()) {
 
@@ -206,27 +211,19 @@ public class ProjectService implements iProjectService {
 
     @Override
     public void rejectStudentByID(Long projectId,Long studentId) throws Exception {
-        StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId);
-        Optional< List<StudentEntity> > optionalStudents = studentResigtrationRepository.findAllStudentOfProject(projectId);
-        if (project != null && optionalStudents.isPresent()) {
-            List<StudentEntity> studentsOfProject = optionalStudents.orElse(new ArrayList<>());
+        Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository.findByProjectsIdAndStudentId(projectId, studentId);
+        if (optionalStudentsResigtration.isPresent()) {
 
-            // Tìm sinh viên cần xóa từ danh sách sinh viên của dự án
-            Optional<StudentEntity> studentToRemove = studentsOfProject.stream()
-                    .filter(student -> student.getId().equals(studentId))
-                    .findFirst();
+            StudentsResigtrationEntity existingStudentProject = optionalStudentsResigtration.get();
 
-            // Kiểm tra xem sinh viên có tồn tại trong danh sách sinh viên của dự án không
-            if (studentToRemove.isPresent()) {
-                // Xóa sinh viên khỏi danh sách sinh viên của dự án
-                studentResigtrationRepository.deleteByStudentIdAndProjectId(projectId,studentId);
-            } else {
+            studentResigtrationRepository.delete(existingStudentProject);
+
+        } else {
                 throw new Exception("Student does not exist in the project.");
             }
-        } else {
-            throw new Exception("Project does not exist.");
-        }
     }
+
+
     @Override
     public List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId,String address) throws Exception{
         Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository.findAllStudentOfProject(projectId);
@@ -253,5 +250,19 @@ public class ProjectService implements iProjectService {
             return projectRepository.save(existingProject);
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
+    }
+
+
+    @Override
+    public StudentsResigtrationEntity ApproveStudent(Long studentId, Long projectId) throws Exception {
+        Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository.findByProjectsIdAndStudentId(studentId, projectId);
+        if (optionalStudentsResigtration.isPresent()) {
+            StudentsResigtrationEntity existingStudentProject = optionalStudentsResigtration.get();
+            if (existingStudentProject.getRegistration_status() != null)
+                existingStudentProject.setRegistration_status("accepted");
+            return studentResigtrationRepository.save(existingStudentProject);
+
+        }
+        throw new DataNotFoundException("Cannot find project with id =" + projectId);
     }
 }

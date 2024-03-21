@@ -149,4 +149,42 @@ public class StudentController {
         }
     }
 
+
+    @GetMapping("/DetailProjectOfStudent")
+    public  ResponseEntity<?> getALlProjectOfStudent (@Valid @RequestParam("studentId") Long studentId,
+                                                      @Valid @RequestParam("projectId") Long projectId ) {
+
+        try{
+            Map<String, Object> project = StudentService.getProjectByStudentIdAndProjectId(studentId,projectId);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(project)
+                    .message("Get detail project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @GetMapping("/ALlProjectOfStudent")
+    public  ResponseEntity<?> getALlProjectOfStudent (@Valid @RequestParam("studentId") Long studentId
+                                                       ) {
+
+        try{
+            Map<String, Object> project = StudentService.getAllProjectOfStudent(studentId);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(project)
+                    .message("Get detail project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+
+
+
 }

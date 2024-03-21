@@ -5,7 +5,7 @@ import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
-import com.example.muahexanh_resigtration.responses.Project.ProjectResponse;
+import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponse;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import jakarta.validation.Valid;
@@ -26,6 +26,22 @@ import java.util.Map;
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
 
+
+    @GetMapping("/{id}") public ResponseEntity<?> getLeaderById( @PathVariable long id)
+    {
+        try
+        {
+            CommunityLeaderEntity communityLeader = communityLeaderService.getCommunityLeaderById(id);
+            return ResponseEntity.ok(
+                    ResponseObject.builder().
+                            data(CommunityLeaderResponse.fromCommunityLeader(communityLeader))
+                            .message("Get community leader by id successfully")
+                            .status(HttpStatus.OK) .build()); }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().
+                body(ResponseObject.builder() .message("An error occurred: " + e.getMessage())
+                        .status(HttpStatus.BAD_REQUEST) .build()); }
+    }
     @GetMapping("/search")
     public ResponseEntity<ResponseObject> SearchProjectByTitle(
             @Valid @RequestParam("id") Long leaderId,

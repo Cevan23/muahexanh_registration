@@ -52,7 +52,7 @@ public class UniversityService implements iUniversityService {
             for (Long projectId : projectIds) {
                 ProjectEntity project;
                 try {
-                    project = projectService.getProjectById(projectId);
+                    project = (ProjectEntity) projectService.getProjectById(projectId).get("projectInformation");
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
