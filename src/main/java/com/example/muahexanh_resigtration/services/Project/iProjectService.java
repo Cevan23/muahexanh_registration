@@ -38,4 +38,6 @@ public interface iProjectService {
     void rejectStudentByID(Long projectId,Long studentId) throws Exception;
 
     StudentsResigtrationEntity ApproveStudent(Long studentId, Long projectId) throws Exception;
+
+    Map<String, Object> getProjectByLeaderIdAndProjectIdStudentAccepted(long leaderId,long projectId) throws Exception;
 }

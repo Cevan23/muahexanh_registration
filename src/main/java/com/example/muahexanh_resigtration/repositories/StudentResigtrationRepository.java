@@ -16,7 +16,10 @@ import java.util.Optional;
 @Repository
 public interface StudentResigtrationRepository extends JpaRepository<StudentsResigtrationEntity,StudentsResigtrationEntityId> {
 
-    @Query("SELECT sr.student FROM StudentsResigtrationEntity sr WHERE sr.project.id = :projectId")
+    @Query("SELECT sr.student FROM StudentsResigtrationEntity sr WHERE sr.project.id = :projectId and sr.registration_status = 'accepted' ")
+    Optional< List<StudentEntity> >  findAllStudentAcceptedOfProject(@Param("projectId") Long projectId);
+
+    @Query("SELECT sr.student FROM StudentsResigtrationEntity sr WHERE sr.project.id = :projectId ")
     Optional< List<StudentEntity> >  findAllStudentOfProject(@Param("projectId") Long projectId);
 
 
