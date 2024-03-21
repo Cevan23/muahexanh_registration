@@ -113,14 +113,16 @@ public class ProjectService implements iProjectService {
                     "Cannot find project with leaderID haha: " + leaderId + " projectId: " + projectId);
         }
 
-        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,projectId);
-        Optional< List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentOfProject(projectId);
+        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,
+                projectId);
+        Optional<List<StudentEntity>> studentsOptional = studentResigtrationRepository
+                .findAllStudentOfProject(projectId);
 
         if (projectOptional.isPresent()) {
 
-            if (studentsOptional.isPresent()){
+            if (studentsOptional.isPresent()) {
                 List<StudentEntity> students = studentsOptional.get();
-                List<Map<String, Object>> studentsHash=students.stream()
+                List<Map<String, Object>> studentsHash = students.stream()
                         .map(student -> {
                             Map<String, Object> studentsMap = new HashMap<>();
                             studentsMap.put("id", student.getId());
@@ -128,7 +130,7 @@ public class ProjectService implements iProjectService {
                             studentsMap.put("email", student.getEmail());
                             studentsMap.put("phone_number", student.getPhoneNumber());
                             studentsMap.put("role", student.getRole());
-                            studentsMap.put("university_name",student.getUniversityName());
+                            studentsMap.put("university_name", student.getUniversityName());
                             studentsMap.put("address", student.getAddress());
                             studentsMap.put("personal_description", student.getPersonalDescription());
                             studentsMap.put("is_male", student.getIsMale());
@@ -143,13 +145,14 @@ public class ProjectService implements iProjectService {
             projectMap.put("description", projectOptional.get().getDescription());
             projectMap.put("address", projectOptional.get().getAddress());
             projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
-            projectMap.put("maximumSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("maximumSchoolsRegistrationMembers",
+                    projectOptional.get().getMaxSchoolRegistrationMembers());
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());
-            if (studentsOptional.isPresent()){
+            if (studentsOptional.isPresent()) {
                 List<StudentEntity> students = studentsOptional.get();
-                List<Map<String, Object>> studentsHash=students.stream()
+                List<Map<String, Object>> studentsHash = students.stream()
                         .map(student -> {
                             Map<String, Object> studentsMap = new HashMap<>();
                             studentsMap.put("id", student.getId());
@@ -157,7 +160,7 @@ public class ProjectService implements iProjectService {
                             studentsMap.put("email", student.getEmail());
                             studentsMap.put("phone_number", student.getPhoneNumber());
                             studentsMap.put("role", student.getRole());
-                            studentsMap.put("university_name",student.getUniversityName());
+                            studentsMap.put("university_name", student.getUniversityName());
                             studentsMap.put("address", student.getAddress());
                             studentsMap.put("personal_description", student.getPersonalDescription());
                             studentsMap.put("is_male", student.getIsMale());
@@ -165,27 +168,90 @@ public class ProjectService implements iProjectService {
                         })
                         .collect(Collectors.toList());
                 projectMap.put("students", studentsHash);
-            }else{
+            } else {
                 projectMap.put("students", "[]");
             }
 
             return projectMap;
         } else {
             throw new DataNotFoundException(
-                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId + "or project not belongs to current leader");
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId
+                            + "or project not belongs to current leader");
         }
     }
 
     @Override
-    public Map<String, Object> getProjectByLeaderIdAndProjectIdStudentAccepted(long leaderId, long projectId) throws Exception {
+    public Map<String, Object> getProjectByLeaderIdAndProjectIdStudentPending(long leaderId, long projectId)
+            throws Exception {
         if (leaderId == 0 || projectId == 0) {
             // Handle the case where leaderId or projectId is 0
             throw new DataNotFoundException(
                     "Cannot find project with leaderID haha: " + leaderId + " projectId: " + projectId);
         }
 
-        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,projectId);
-        Optional< List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentAcceptedOfProject(projectId);
+        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,
+                projectId);
+        Optional<List<StudentEntity>> studentsOptional = studentResigtrationRepository
+                .findAllStudentOfProject(projectId);
+
+        if (projectOptional.isPresent()) {
+            Map<String, Object> projectMap = new HashMap<>();
+            if (studentsOptional.isPresent()) {
+
+                List<StudentEntity> students = studentsOptional.get();
+                List<Map<String, Object>> studentsHash = students.stream()
+                        .map(student -> {
+                            Optional<StudentsResigtrationEntity> studentResEntity = studentResigtrationRepository
+                                    .findByProjectsIdAndStudentId(projectId, student.getId());
+                            Map<String, Object> studentsMap = new HashMap<>();
+                            if (studentResEntity.get().getRegistration_status().equals("pending")) {
+                                studentsMap.put("id", student.getId());
+                                studentsMap.put("full_name", student.getFullName());
+                                studentsMap.put("email", student.getEmail());
+                                studentsMap.put("phone_number", student.getPhoneNumber());
+                                studentsMap.put("role", student.getRole());
+                                studentsMap.put("university_name", student.getUniversityName());
+                                studentsMap.put("address", student.getAddress());
+                                studentsMap.put("personal_description", student.getPersonalDescription());
+                                studentsMap.put("is_male", student.getIsMale());
+                            }
+                            return studentsMap;
+                        })
+                        .collect(Collectors.toList());
+
+                projectMap.put("id", projectOptional.get().getId());
+                projectMap.put("title", projectOptional.get().getTitle());
+                projectMap.put("description", projectOptional.get().getDescription());
+                projectMap.put("address", projectOptional.get().getAddress());
+                projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
+                projectMap.put("maximumSchoolsRegistrationMembers",
+                        projectOptional.get().getMaxSchoolRegistrationMembers());
+                projectMap.put("status", projectOptional.get().getStatus());
+                projectMap.put("dateStart", projectOptional.get().getDateStart());
+                projectMap.put("dateEnd", projectOptional.get().getDateEnd());
+                projectMap.put("students", studentsHash);
+            }
+            return projectMap;
+        } else {
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId
+                            + "or project not belongs to current leader");
+        }
+
+    }
+
+    public Map<String, Object> getProjectByLeaderIdAndProjectIdStudentAccepted(long leaderId, long projectId)
+            throws Exception {
+        if (leaderId == 0 || projectId == 0) {
+            // Handle the case where leaderId or projectId is 0
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID haha: " + leaderId + " projectId: " + projectId);
+        }
+
+        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,
+                projectId);
+        Optional<List<StudentEntity>> studentsOptional = studentResigtrationRepository
+                .findAllStudentAcceptedOfProject(projectId);
 
         if (projectOptional.isPresent()) {
 
@@ -195,7 +261,8 @@ public class ProjectService implements iProjectService {
             projectMap.put("description", projectOptional.get().getDescription());
             projectMap.put("address", projectOptional.get().getAddress());
             projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
-            projectMap.put("maximumSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("maximumSchoolsRegistrationMembers",
+                    projectOptional.get().getMaxSchoolRegistrationMembers());
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());
@@ -203,7 +270,8 @@ public class ProjectService implements iProjectService {
             return projectMap;
         } else {
             throw new DataNotFoundException(
-                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId + "or project not belongs to current leader");
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId
+                            + "or project not belongs to current leader");
         }
     }
 
@@ -255,9 +323,9 @@ public class ProjectService implements iProjectService {
         Optional<UniversityEntity> universityEntityOptional = universityRepository.findById(universityId);
         if (universityEntityOptional.isPresent()) {
             List<ProjectEntity> listProject = universityEntityOptional.get().getProjects();
-            if(listProject.isEmpty()){
+            if (listProject.isEmpty()) {
                 throw new DataNotFoundException("Cannot find project with universityId: " + universityId);
-            }else {
+            } else {
                 return listProject;
             }
         } else {
@@ -272,35 +340,36 @@ public class ProjectService implements iProjectService {
 
     @Override
     public List<StudentEntity> findAllStudentOfProject(Long projectId) throws Exception {
-        Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository.findAllStudentOfProject(projectId);
-        if(optionalStudentsOfProject.isPresent()){
+        Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository
+                .findAllStudentOfProject(projectId);
+        if (optionalStudentsOfProject.isPresent()) {
             return optionalStudentsOfProject.get();
-        }else {
+        } else {
             throw new DataNotFoundException("No students found for project with ID: " + projectId);
         }
     }
 
     @Override
-    public void rejectStudentByID(Long projectId,Long studentId) throws Exception {
+    public void rejectStudentByID(Long projectId, Long studentId) throws Exception {
 
-        Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository.findByProjectsIdAndStudentId(projectId, studentId);
+        Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository
+                .findByProjectsIdAndStudentId(projectId, studentId);
         if (optionalStudentsResigtration.isPresent()) {
-
 
             StudentsResigtrationEntity existingStudentProject = optionalStudentsResigtration.get();
 
             studentResigtrationRepository.delete(existingStudentProject);
 
         } else {
-                throw new Exception("Student does not exist in the project.");
-            }
+            throw new Exception("Student does not exist in the project.");
+        }
     }
 
-
     @Override
-    public List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId,String address) throws Exception{
-        Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository.findAllStudentOfProject(projectId);
-        if(optionalStudentsOfProject.isPresent()){
+    public List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId, String address) throws Exception {
+        Optional<List<StudentEntity>> optionalStudentsOfProject = studentResigtrationRepository
+                .findAllStudentOfProject(projectId);
+        if (optionalStudentsOfProject.isPresent()) {
             // Get the list of students associated with the project
             List<StudentEntity> studentsOfProject = optionalStudentsOfProject.get();
 
@@ -309,10 +378,11 @@ public class ProjectService implements iProjectService {
             // Exclude students from studentsOfProject that are also in studentsWithAddress
             studentsOfProject.removeAll(studentsWithAddress);
             return studentsOfProject;
-        }else {
+        } else {
             throw new DataNotFoundException("No students found for project with ID: " + projectId);
         }
     }
+
     @Override
     public ProjectEntity updateProjectDone(long id) throws Exception {
         Optional<ProjectEntity> optionalProject = projectRepository.findById(id);
@@ -325,10 +395,10 @@ public class ProjectService implements iProjectService {
         throw new DataNotFoundException("Cannot find project with id =" + id);
     }
 
-
     @Override
     public StudentsResigtrationEntity ApproveStudent(Long studentId, Long projectId) throws Exception {
-        Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository.findByProjectsIdAndStudentId(studentId, projectId);
+        Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository
+                .findByProjectsIdAndStudentId(studentId, projectId);
         if (optionalStudentsResigtration.isPresent()) {
             StudentsResigtrationEntity existingStudentProject = optionalStudentsResigtration.get();
             if (existingStudentProject.getRegistration_status() != null)
