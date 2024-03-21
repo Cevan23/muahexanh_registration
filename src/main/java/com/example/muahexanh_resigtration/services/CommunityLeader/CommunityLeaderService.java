@@ -3,22 +3,16 @@ package com.example.muahexanh_resigtration.services.CommunityLeader;
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
 
-import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
 import com.example.muahexanh_resigtration.repositories.CommunityLeaderRepository;
-import com.example.muahexanh_resigtration.repositories.ProjectRepository;
-import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponse;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +22,6 @@ import java.util.stream.Collectors;
 public class CommunityLeaderService implements iCommunityLeaderService {
     private final CommunityLeaderRepository communityLeaderRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ProjectRepository projectRepository;
 
     @Override
     public List<ProjectEntity> searchProjectByTitle(Long id, String title) {
@@ -140,6 +133,7 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         return CommunityLeaderResponseUser.fromCommunityLeaderUser(communityLeader);
     }
 
+
     @Override
     public  CommunityLeaderEntity createProjectOfComCommunityLeader(Long communityLeaderId, ProjectDTO projectDTO ) throws ParseException
     {
@@ -149,7 +143,7 @@ public class CommunityLeaderService implements iCommunityLeaderService {
         Optional<CommunityLeaderEntity> optionalCommunityLeader = communityLeaderRepository.getDetailCommunityLeader(communityLeaderId);
         if (optionalCommunityLeader.isPresent()) {
             CommunityLeaderEntity communityLeader = optionalCommunityLeader.get();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
             java.sql.Date sqlDateStart, sqlDateEnd;
             java.util.Date parsed = format.parse(projectDTO.getDateStart());
             sqlDateStart = new java.sql.Date(parsed.getTime());

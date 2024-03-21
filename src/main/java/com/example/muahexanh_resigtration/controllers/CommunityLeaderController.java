@@ -2,6 +2,8 @@ package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.CommunityLeaderDTO;
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
+
+import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
@@ -78,6 +80,7 @@ public class CommunityLeaderController {
         }
     }
 
+
     @PostMapping("")
     public ResponseEntity<?> insertCommunityLeader(@Valid @RequestBody CommunityLeaderDTO communityLeaderDTO, BindingResult result) {
         try {
@@ -113,26 +116,27 @@ public class CommunityLeaderController {
 
     }
 
-//    @PostMapping("/createProject")
-//    public  ResponseEntity<?> createProjectOfCommunityLeader (@Valid @RequestParam("communityLeaderId") Long leaderId,
-//                                             @Valid @RequestBody ProjectDTO projectDTO,
-//                                             BindingResult result) {
-//        try {
-//            if(result.hasErrors()) {
-//                List<String> errorMessages = result.getFieldErrors()
-//                        .stream()
-//                        .map(FieldError::getDefaultMessage)
-//                        .toList();
-//                return ResponseEntity.badRequest().body(errorMessages);
-//            }
-//            // logic
-//            return ResponseEntity.ok(ResponseObject.builder()
-//                    .data()
-//                    .message("Create project successfully")
-//                    .status(HttpStatus.OK)
-//                    .build());
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    @PostMapping("/createProject")
+    public  ResponseEntity<?> createProjectOfCommunityLeader (@Valid @RequestParam("communityLeaderId") Long leaderId,
+                                             @Valid @RequestBody ProjectDTO projectDTO,
+                                             BindingResult result) {
+        try {
+            if(result.hasErrors()) {
+                List<String> errorMessages = result.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errorMessages);
+            }
+            // logic
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data()
+                    .message("Create project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
