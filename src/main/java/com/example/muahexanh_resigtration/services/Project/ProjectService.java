@@ -329,7 +329,7 @@ public class ProjectService implements iProjectService {
     public void rejectStudentByID(Long projectId, Long studentId) throws Exception {
 
         Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository
-                .findByProjectsIdAndStudentId(projectId, studentId);
+                .findByProjectsIdAndStudentId(studentId, projectId);
         if (optionalStudentsResigtration.isPresent()) {
 
             StudentsResigtrationEntity existingStudentProject = optionalStudentsResigtration.get();
