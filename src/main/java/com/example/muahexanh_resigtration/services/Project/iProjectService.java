@@ -27,7 +27,7 @@ public interface iProjectService {
 
     void deleteProject(long id);
 
-    List<ProjectEntity> getProjectByUniversityId(long universityId) throws Exception;
+    List<Map<String, Object>> getProjectByUniversityId(long universityId) throws Exception;
     ProjectEntity updateProjectDone(long id) throws Exception;
 
     List<StudentEntity> findAllStudentOfProject(Long projectId) throws Exception ;

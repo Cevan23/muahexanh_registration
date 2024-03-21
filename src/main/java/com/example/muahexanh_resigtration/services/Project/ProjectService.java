@@ -176,7 +176,7 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public List<ProjectEntity> getProjectByUniversityId(long universityId) throws Exception {
+    public List<Map<String, Object>> getProjectByUniversityId(long universityId) throws Exception {
         if (universityId == 0) {
             // Handle the case where leaderId or projectId is 0
             throw new DataNotFoundException("Cannot find project with universityId: " + universityId);
@@ -187,7 +187,22 @@ public class ProjectService implements iProjectService {
             if(listProject.isEmpty()){
                 throw new DataNotFoundException("Cannot find project with universityId: " + universityId);
             }else {
-                return listProject;
+                return listProject.stream()
+                        .map(project -> {
+                            Map<String, Object> projectMap = new HashMap<>();
+                            projectMap.put("id", project.getId());
+                            projectMap.put("title", project.getTitle());
+                            projectMap.put("description", project.getDescription());
+                            projectMap.put("address", project.getAddress());
+                            projectMap.put("maximumStudents", project.getMaxProjectMembers());
+                            projectMap.put("maximumSchoolsRegistrationMembers", project.getMaxSchoolRegistrationMembers());
+                            projectMap.put("status", project.getStatus());
+                            projectMap.put("dateStart", project.getDateStart());
+                            projectMap.put("dateEnd", project.getDateEnd());
+                            projectMap.put("imgRoot", project.getImgRoot());
+                            return projectMap;
+                        })
+                        .collect(Collectors.toList());
             }
         } else {
             throw new DataNotFoundException("Cannot find university with universityId: " + universityId);

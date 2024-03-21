@@ -123,13 +123,8 @@ public class ProjectController {
     @GetMapping("/university/{id}")
     public ResponseEntity<?> getProjectsOfUniversity(@PathVariable Long id) {
         try {
-            List<ProjectEntity> projectResponses = projectService.getProjectByUniversityId(id);
-            return ResponseEntity.ok(
-                    ResponseObject.builder()
-                            .data(ProjectListResponse.fromListProject(projectResponses))
-                            .message("Get all project of university successfully")
-                            .status(HttpStatus.OK)
-                            .build());
+            List<Map<String, Object>> projectResponses = projectService.getProjectByUniversityId(id);
+            return new ResponseEntity<>(projectResponses, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
