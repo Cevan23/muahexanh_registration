@@ -216,8 +216,8 @@ public class StudentService implements iStudentService {
             projectMap.put("title", projectOptional.get().getTitle());
             projectMap.put("description", projectOptional.get().getDescription());
             projectMap.put("address", projectOptional.get().getAddress());
-            projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
-            projectMap.put("maximumSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("maxProjectMembers", projectOptional.get().getMaxProjectMembers());
+            projectMap.put("maxSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());
