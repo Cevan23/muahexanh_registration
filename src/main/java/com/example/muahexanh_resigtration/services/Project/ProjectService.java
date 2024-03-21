@@ -251,8 +251,10 @@ public class ProjectService implements iProjectService {
 
     @Override
     public void rejectStudentByID(Long projectId,Long studentId) throws Exception {
+
         Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository.findByProjectsIdAndStudentId(projectId, studentId);
         if (optionalStudentsResigtration.isPresent()) {
+
 
             StudentsResigtrationEntity existingStudentProject = optionalStudentsResigtration.get();
 

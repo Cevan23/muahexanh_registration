@@ -7,11 +7,8 @@ import com.example.muahexanh_resigtration.entities.StudentEntity;
 
 import com.example.muahexanh_resigtration.entities.StudentsResigtrationEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
-import com.example.muahexanh_resigtration.repositories.ProjectRepository;
-import com.example.muahexanh_resigtration.repositories.StudentRepository;
-import com.example.muahexanh_resigtration.repositories.StudentResigtrationRepository;
+import com.example.muahexanh_resigtration.repositories.*;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
-import com.example.muahexanh_resigtration.repositories.UniversityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -161,11 +158,28 @@ public class StudentService implements iStudentService {
             if (numberOfStudentsFromSameUniversity < maxSchoolRegistrationMembers) {
                 Optional<ProjectEntity> optionalProject = projectRepository.findById(projectId);
                 if (optionalProject.isPresent()) {
-                    StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId);
-                    // Thêm sinh viên vào danh sách sinh viên của dự án
-                    project.setStudent(student);
-                    // Lưu cập nhật vào cơ sở dữ liệu
-                    studentResigtrationRepository.save(project);
+                    ProjectEntity project = optionalProject.get();
+
+
+                    // Create a new StudentsResigtrationEntity instance
+                    StudentsResigtrationEntity studentsResigtrationEntity = new StudentsResigtrationEntity();
+
+                    // Create the composite key
+                    StudentsResigtrationEntityId id = new StudentsResigtrationEntityId();
+                    id.setProjectId(project.getId());
+                    id.setStudentId(student.getId());
+
+                    // Set the project and student for the registration entity
+                    studentsResigtrationEntity.setId(id);
+                    studentsResigtrationEntity.setProject(project);
+                    studentsResigtrationEntity.setStudent(student);
+
+                    // Set the registration status as needed
+                    studentsResigtrationEntity.setRegistration_status("pending");
+
+                    // Save the registration entity
+                    studentsResigtrationEntity = studentResigtrationRepository.save(studentsResigtrationEntity);
+
                 } else {
                     throw new Exception("Không tìm thấy dự án với ID đã cung cấp.");
                 }
