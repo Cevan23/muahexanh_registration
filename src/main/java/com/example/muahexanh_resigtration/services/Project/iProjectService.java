@@ -13,7 +13,7 @@ public interface iProjectService {
 
     ProjectEntity insertProject(ProjectDTO projectDTO) throws ParseException;
 
-    ProjectEntity getProjectById(long id) throws Exception;
+    Map<String, Object> getProjectById(long id) throws Exception;
 
     List<Map<String, Object>> getAllProjects();
 

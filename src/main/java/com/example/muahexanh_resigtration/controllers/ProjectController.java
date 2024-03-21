@@ -58,9 +58,9 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProjectById(@Valid @PathVariable("id") Long projectId) throws Exception {
-        ProjectEntity existingProject = projectService.getProjectById(projectId);
+        Map<String, Object> existingProject = projectService.getProjectById(projectId);
         return ResponseEntity.ok(ResponseObject.builder()
-                .data(ProjectResponse.fromProject(existingProject))
+                .data(existingProject)
                 .message("Get detail project successfully")
                 .status(HttpStatus.OK)
                 .build());

@@ -50,10 +50,16 @@ public class ProjectService implements iProjectService {
     }
 
     @Override
-    public ProjectEntity getProjectById(long id) throws Exception {
+    public Map<String, Object> getProjectById(long id) throws Exception {
         Optional<ProjectEntity> optionalProject = projectRepository.getDetailProject(id);
+        Optional<CommunityLeaderEntity> optionalCommunityLeader = projectRepository.getCommunityLeaderByProjectId(id);
         if (optionalProject.isPresent()) {
-            return optionalProject.get();
+            Map<String, Object> projectMap = new HashMap<>();
+            projectMap.put("number_of_student", studentResigtrationRepository.findAllStudentOfProject(id).get().size());
+            projectMap.put("projectInformation", optionalProject.get());
+            projectMap.put("leader_name", optionalCommunityLeader.get().getFullName());
+            projectMap.put("leader_contact", optionalCommunityLeader.get().getPhoneNumber());
+            return projectMap;
         }
         throw new DataNotFoundException("Cannot find project with id =" + id);
     }
@@ -104,7 +110,7 @@ public class ProjectService implements iProjectService {
         if (leaderId == 0 || projectId == 0) {
             // Handle the case where leaderId or projectId is 0
             throw new DataNotFoundException(
-                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+                    "Cannot find project with leaderID haha: " + leaderId + " projectId: " + projectId);
         }
 
         Optional<ProjectEntity> projectOptional = studentResigtrationRepository.findAllProjectByID(projectId);
@@ -126,7 +132,7 @@ public class ProjectService implements iProjectService {
             return projectMap;
         } else {
             throw new DataNotFoundException(
-                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId + "or project not belongs to current leader");
         }
     }
 
