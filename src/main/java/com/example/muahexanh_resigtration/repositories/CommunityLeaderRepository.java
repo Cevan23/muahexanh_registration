@@ -34,4 +34,6 @@ public interface CommunityLeaderRepository extends JpaRepository<CommunityLeader
                                          @Param("password") String password);
 
     Optional<CommunityLeaderEntity> findByEmail(String email);
+
+
 }

@@ -23,7 +23,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentController {
     private final iStudentService StudentService;
     private final iUniversityService UniversityService;

@@ -1,14 +1,19 @@
 package com.example.muahexanh_resigtration.controllers;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
+import com.example.muahexanh_resigtration.dtos.ProjectDTO;
+import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.responses.CommunityLeader.CommunityLeaderResponseUser;
+import com.example.muahexanh_resigtration.responses.Project.ProjectResponse;
 import com.example.muahexanh_resigtration.responses.ResponseObject;
 import com.example.muahexanh_resigtration.services.CommunityLeader.iCommunityLeaderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,7 +23,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/communityleader")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CommunityLeaderController {
     private final iCommunityLeaderService communityLeaderService;
 
@@ -73,6 +77,40 @@ public class CommunityLeaderController {
                             .build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/createProject")
+    public  ResponseEntity<?> createProjectOfCommunityLeader (@Valid @RequestParam("communityLeaderId") Long leaderId,
+                                             @Valid @RequestBody ProjectDTO projectDTO,
+                                             BindingResult result) {
+        try {
+            if (leaderId == null || leaderId <= 0) {
+                return ResponseEntity.badRequest().body("Invalid communityLeaderId");
+            }
+
+            // Kiểm tra xem projectDTO có hợp lệ không
+            if (projectDTO == null) {
+                return ResponseEntity.badRequest().body("ProjectDTO is required");
+            }
+            if(result.hasErrors()) {
+                List<String> errorMessages = result.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errorMessages );
+            }
+            CommunityLeaderEntity projectResponse = communityLeaderService.createProjectOfComCommunityLeader(leaderId, projectDTO);
+            if (projectResponse == null) {
+                return ResponseEntity.badRequest().body("Response is Null");
+            }
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(projectResponse)
+                    .message("Create project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
