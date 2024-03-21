@@ -161,7 +161,7 @@ public class StudentService implements iStudentService {
             if (numberOfStudentsFromSameUniversity < maxSchoolRegistrationMembers) {
                 Optional<ProjectEntity> optionalProject = projectRepository.findById(projectId);
                 if (optionalProject.isPresent()) {
-                    StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId);
+                    StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId,studentId);
                     // Thêm sinh viên vào danh sách sinh viên của dự án
                     project.setStudent(student);
                     // Lưu cập nhật vào cơ sở dữ liệu
