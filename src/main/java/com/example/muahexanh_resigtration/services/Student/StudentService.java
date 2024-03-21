@@ -17,10 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +25,7 @@ public class StudentService implements iStudentService {
     private final StudentRepository studentRepository;
     private final ProjectRepository projectRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
 
     private final StudentResigtrationRepository studentResigtrationRepository;
     private final UniversityRepository universityRepository;
@@ -178,5 +176,72 @@ public class StudentService implements iStudentService {
             throw new Exception("Không tìm thấy sinh viên hoặc dự án.");
         }
 
+    }
+
+    @Override
+    public Map<String, Object> getProjectByStudentIdAndProjectId(long studentId, long projectId) throws Exception {
+        if ( studentId == 0 || projectId == 0) {
+            // Handle the case where leaderId or projectId is 0
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " +  studentId + " projectId: " + projectId);
+        }
+
+        Optional< ProjectEntity > projectOptional = studentResigtrationRepository.findAllProjectByID(projectId);
+        Optional< StudentEntity > studentsOptional = studentRepository.getStudentById(studentId);
+
+        if (projectOptional.isPresent()) {
+
+            Map<String, Object> projectMap = new HashMap<>();
+            projectMap.put("id", projectOptional.get().getId());
+            projectMap.put("title", projectOptional.get().getTitle());
+            projectMap.put("description", projectOptional.get().getDescription());
+            projectMap.put("address", projectOptional.get().getAddress());
+            projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
+            projectMap.put("maximumSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("status", projectOptional.get().getStatus());
+            projectMap.put("dateStart", projectOptional.get().getDateStart());
+            projectMap.put("dateEnd", projectOptional.get().getDateEnd());
+            projectMap.put("students", studentsOptional);
+            return projectMap;
+        } else {
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " +  studentId + " projectId: " + projectId + "or student don't belong to this project" );
+        }
+    }
+
+    @Override
+    public   Map<String, Object> getAllProjectOfStudent(Long studentId) throws Exception {
+        if ( studentId == 0 ) {
+            // Handle the case where leaderId or projectId is 0
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " +  studentId );
+        }
+
+        Optional< List< ProjectEntity > > projectOptional = studentResigtrationRepository. findAllProjectOfStudent(studentId);
+
+        if (projectOptional.isPresent()) {
+            List<Map<String, Object>> projectList = new ArrayList<>();
+            for (ProjectEntity project : projectOptional.get()) {
+                Map<String, Object> projectMap = new HashMap<>();
+                projectMap.put("id", project.getId());
+                projectMap.put("title", project.getTitle());
+                projectMap.put("description", project.getDescription());
+                projectMap.put("address", project.getAddress());
+                projectMap.put("maximumStudents", project.getMaxProjectMembers());
+                projectMap.put("maximumSchoolsRegistrationMembers", project.getMaxSchoolRegistrationMembers());
+                projectMap.put("status", project.getStatus());
+                projectMap.put("dateStart", project.getDateStart());
+                projectMap.put("dateEnd", project.getDateEnd());
+                // Add more properties as needed
+                projectList.add(projectMap);
+            }
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("projects", projectList);
+            return result;
+        } else {
+            throw new DataNotFoundException(
+                    "Cannot find project with leaderID: " +  studentId + "or student don't belong to this project" );
+        }
     }
 }
