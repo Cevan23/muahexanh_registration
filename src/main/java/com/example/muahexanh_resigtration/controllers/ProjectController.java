@@ -195,13 +195,15 @@ public class ProjectController {
                     .status(HttpStatus.BAD_REQUEST)
                     .build());
         }
-    }
+    }   
     @DeleteMapping("/rejectStudentByID/")
     public String rejectStudentByID(
-            @Valid @RequestParam("studentId") Long studentId,
-            @Valid @RequestParam("projectId") Long projectId)
+            @Valid @RequestParam("studentId") String studentIdStr,
+            @Valid @RequestParam("projectId") String projectIdStr)
     {
         try {
+            Long studentId = Long.parseLong(studentIdStr);
+            Long projectId = Long.parseLong(projectIdStr);
             // Call the service method to reject students by address
             projectService.rejectStudentByID(projectId, studentId);
             return "Students rejected successfully";
@@ -212,10 +214,14 @@ public class ProjectController {
 
     @PutMapping("/approveStudent/")
     public String approveStudent(
-            @Valid @RequestParam("studentId") Long studentId,
-            @Valid @RequestParam("projectId") Long projectId)
+            @Valid @RequestParam("studentId") String studentIdStr,
+            @Valid @RequestParam("projectId") String projectIdStr)
     {
+
         try {
+            Long studentId = Long.parseLong(studentIdStr);
+            Long projectId = Long.parseLong(projectIdStr);
+
             projectService.ApproveStudent(studentId, projectId);
             return "Students approve successfully";
         } catch (Exception e) {
