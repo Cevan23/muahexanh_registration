@@ -113,26 +113,26 @@ public class CommunityLeaderController {
 
     }
 
-//    @PostMapping("/createProject")
-//    public  ResponseEntity<?> createProjectOfCommunityLeader (@Valid @RequestParam("communityLeaderId") Long leaderId,
-//                                             @Valid @RequestBody ProjectDTO projectDTO,
-//                                             BindingResult result) {
-//        try {
-//            if(result.hasErrors()) {
-//                List<String> errorMessages = result.getFieldErrors()
-//                        .stream()
-//                        .map(FieldError::getDefaultMessage)
-//                        .toList();
-//                return ResponseEntity.badRequest().body(errorMessages);
-//            }
-//            // logic
-//            return ResponseEntity.ok(ResponseObject.builder()
-//                    .data()
-//                    .message("Create project successfully")
-//                    .status(HttpStatus.OK)
-//                    .build());
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    @PostMapping("/createProject")
+    public  ResponseEntity<?> createProjectOfCommunityLeader (@Valid @RequestParam("communityLeaderId") Long leaderId,
+                                             @Valid @RequestBody ProjectDTO projectDTO,
+                                             BindingResult result) {
+        try {
+            if(result.hasErrors()) {
+                List<String> errorMessages = result.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList();
+                return ResponseEntity.badRequest().body(errorMessages);
+            }
+            // logic
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data()
+                    .message("Create project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
