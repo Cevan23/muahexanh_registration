@@ -113,8 +113,8 @@ public class ProjectService implements iProjectService {
                     "Cannot find project with leaderID haha: " + leaderId + " projectId: " + projectId);
         }
 
-        Optional<ProjectEntity> projectOptional = studentResigtrationRepository.findAllProjectByID(projectId);
-        Optional<List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentOfProject(projectId);
+        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,projectId);
+        Optional< List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentOfProject(projectId);
 
         if (projectOptional.isPresent()) {
 
