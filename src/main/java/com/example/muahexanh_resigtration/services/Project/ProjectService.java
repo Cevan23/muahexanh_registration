@@ -118,6 +118,25 @@ public class ProjectService implements iProjectService {
 
         if (projectOptional.isPresent()) {
 
+            if (studentsOptional.isPresent()){
+                List<StudentEntity> students = studentsOptional.get();
+                List<Map<String, Object>> studentsHash=students.stream()
+                        .map(student -> {
+                            Map<String, Object> studentsMap = new HashMap<>();
+                            studentsMap.put("id", student.getId());
+                            studentsMap.put("full_name", student.getFullName());
+                            studentsMap.put("email", student.getEmail());
+                            studentsMap.put("phone_number", student.getPhoneNumber());
+                            studentsMap.put("role", student.getRole());
+                            studentsMap.put("university_name",student.getUniversityName());
+                            studentsMap.put("address", student.getAddress());
+                            studentsMap.put("personal_description", student.getPersonalDescription());
+                            studentsMap.put("is_male", student.getIsMale());
+                            return studentsMap;
+                        })
+                        .collect(Collectors.toList());
+            }
+
             Map<String, Object> projectMap = new HashMap<>();
             projectMap.put("id", projectOptional.get().getId());
             projectMap.put("title", projectOptional.get().getTitle());
@@ -128,7 +147,28 @@ public class ProjectService implements iProjectService {
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());
-            projectMap.put("students", studentsOptional);
+            if (studentsOptional.isPresent()){
+                List<StudentEntity> students = studentsOptional.get();
+                List<Map<String, Object>> studentsHash=students.stream()
+                        .map(student -> {
+                            Map<String, Object> studentsMap = new HashMap<>();
+                            studentsMap.put("id", student.getId());
+                            studentsMap.put("full_name", student.getFullName());
+                            studentsMap.put("email", student.getEmail());
+                            studentsMap.put("phone_number", student.getPhoneNumber());
+                            studentsMap.put("role", student.getRole());
+                            studentsMap.put("university_name",student.getUniversityName());
+                            studentsMap.put("address", student.getAddress());
+                            studentsMap.put("personal_description", student.getPersonalDescription());
+                            studentsMap.put("is_male", student.getIsMale());
+                            return studentsMap;
+                        })
+                        .collect(Collectors.toList());
+                projectMap.put("students", studentsHash);
+            }else{
+                projectMap.put("students", "[]");
+            }
+
             return projectMap;
         } else {
             throw new DataNotFoundException(
