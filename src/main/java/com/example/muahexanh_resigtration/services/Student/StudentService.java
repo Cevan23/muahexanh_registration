@@ -179,4 +179,23 @@ public class StudentService implements iStudentService {
         }
 
     }
+
+    public List<ProjectEntity> getAllProjectsOfUniversity(long studentId) throws Exception {
+        Optional<StudentEntity> studentEntity = studentRepository.findById(studentId);
+        if (studentEntity.isPresent()) {
+            StudentEntity student = studentEntity.get();
+            String universityNameofStudent = student.getUniversityName();
+            Long universityId = universityRepository.getUniversityIdFromName(universityNameofStudent);
+
+            List<ProjectEntity> projects = universityRepository.getAllProjectsOfUniversity(universityId);
+            if (!projects.isEmpty()) {
+                return projects;
+            } else {
+                throw new DataNotFoundException("No projects found for university with ID: " + universityId);
+            }
+        } else {
+            throw new Exception("Không tìm thấy sinh viên");
+        }
+    }
+
 }
