@@ -99,9 +99,15 @@ public class UniversityController {
     }
 
     @GetMapping("/getUniversities/{id}")
-    public ResponseEntity<UniversityEntity> getUniversityById(@PathVariable Long id) {
+    public ResponseEntity<?> getUniversityById(@PathVariable Long id) {
         Optional<UniversityEntity> university = universityService.getUniversityById(id);
-        return university.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        UniversityEntity universityResponse = university.get();
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .data(UniversityResponse.fromUniversity(universityResponse))
+                        .message("Get university by id successfully")
+                        .status(HttpStatus.OK)
+                        .build());
     }
 
     @GetMapping("/getAllUniversities")
