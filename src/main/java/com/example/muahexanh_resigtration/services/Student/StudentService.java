@@ -178,6 +178,26 @@ public class StudentService implements iStudentService {
 
     }
 
+
+    public List<ProjectEntity> getAllProjectsOfUniversity(long studentId) throws Exception {
+        Optional<StudentEntity> studentEntity = studentRepository.findById(studentId);
+        if (studentEntity.isPresent()) {
+            StudentEntity student = studentEntity.get();
+            String universityNameofStudent = student.getUniversityName();
+            Long universityId = universityRepository.getUniversityIdFromName(universityNameofStudent);
+
+            List<ProjectEntity> projects = universityRepository.getAllProjectsOfUniversity(universityId);
+            if (!projects.isEmpty()) {
+                return projects;
+            } else {
+                throw new DataNotFoundException("No projects found for university with ID: " + universityId);
+            }
+        } else {
+            throw new Exception("Không tìm thấy sinh viên");
+        }
+    }
+
+
     @Override
     public Map<String, Object> getProjectByStudentIdAndProjectId(long studentId, long projectId) throws Exception {
         if ( studentId == 0 || projectId == 0) {
@@ -244,4 +264,5 @@ public class StudentService implements iStudentService {
                     "Cannot find project with leaderID: " +  studentId + "or student don't belong to this project" );
         }
     }
+
 }

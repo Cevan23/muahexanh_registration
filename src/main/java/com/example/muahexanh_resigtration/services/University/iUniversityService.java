@@ -2,6 +2,7 @@ package com.example.muahexanh_resigtration.services.University;
 
 import com.example.muahexanh_resigtration.dtos.LoginDTO;
 import com.example.muahexanh_resigtration.dtos.UniversityDTO;
+import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface iUniversityService {
     Optional<UniversityEntity> getUniversityById(Long id);
 
     List<UniversityEntity> getAllUniversities();
-    List<String> getAllUniversityNameOfProject(Long projectId) throws Exception;
+    List<ProjectEntity> getAllProjectsOfUniversity(Long universityID) throws Exception;
 
     UniversityEntity updateUniversity(Long id, UniversityEntity updatedUniversity);
 
