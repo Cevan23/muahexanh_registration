@@ -214,12 +214,14 @@ public class ProjectService implements iProjectService {
         Optional<StudentsResigtrationEntity> optionalStudentsResigtration = studentResigtrationRepository.findByProjectsIdAndStudentId(projectId, studentId);
         if (optionalStudentsResigtration.isPresent()) {
 
-                studentResigtrationRepository.deleteByStudentIdAndProjectId(projectId,studentId);
+            StudentsResigtrationEntity existingStudentProject = optionalStudentsResigtration.get();
 
-            } else {
+            studentResigtrationRepository.delete(existingStudentProject);
+
+        } else {
                 throw new Exception("Student does not exist in the project.");
             }
-        }
+    }
 
 
     @Override
