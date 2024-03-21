@@ -11,7 +11,6 @@ import com.example.muahexanh_resigtration.repositories.ProjectRepository;
 import com.example.muahexanh_resigtration.repositories.StudentRepository;
 import com.example.muahexanh_resigtration.repositories.StudentResigtrationRepository;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
-import com.example.muahexanh_resigtration.repositories.UniversityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
