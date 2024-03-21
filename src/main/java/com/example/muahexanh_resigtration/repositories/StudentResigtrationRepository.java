@@ -22,8 +22,7 @@ public interface StudentResigtrationRepository extends JpaRepository<StudentsRes
     @Query("SELECT sr.student FROM StudentsResigtrationEntity sr WHERE sr.project.id = :projectId ")
     Optional< List<StudentEntity> >  findAllStudentOfProject(@Param("projectId") Long projectId);
 
-    @Query("SELECT sr FROM StudentsResigtrationEntity sr WHERE sr.id.projectId = :projectId")
-    StudentsResigtrationEntity findByProjectsId(Long projectId);
+
 
     @Query("SELECT sr FROM StudentsResigtrationEntity sr WHERE sr.id.projectId = :projectId and sr.id.studentId = :studentId")
     Optional<StudentsResigtrationEntity> findByProjectsIdAndStudentId(@Param("projectId") Long projectId, @Param("studentId") Long studentId);

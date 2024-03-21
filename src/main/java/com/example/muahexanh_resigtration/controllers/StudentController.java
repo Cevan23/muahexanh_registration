@@ -138,12 +138,8 @@ public class StudentController {
     @GetMapping("/getAllProjectsOfUniversity")
     public ResponseEntity<?> getAllUniversityNameOfProject(@Valid @RequestParam("studentId") String studentId) {
         try {
-            return ResponseEntity.ok(
-                    ResponseObject.builder()
-                            .data(StudentService.getAllProjectsOfUniversity(Long.parseLong(studentId)))
-                            .message("Get student by containing address successfully")
-                            .status(HttpStatus.OK)
-                            .build());
+            List<Map<String, Object>> projects = StudentService.getAllProjectsOfUniversity(Long.parseLong(studentId));
+            return new ResponseEntity<>(projects, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Can not apply project: " + e.getMessage());
         }
