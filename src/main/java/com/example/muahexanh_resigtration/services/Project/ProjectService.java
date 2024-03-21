@@ -105,10 +105,10 @@ public class ProjectService implements iProjectService {
         if (leaderId == 0 || projectId == 0) {
             // Handle the case where leaderId or projectId is 0
             throw new DataNotFoundException(
-                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+                    "Cannot find project with leaderID haha: " + leaderId + " projectId: " + projectId);
         }
 
-        Optional<ProjectEntity> projectOptional = studentResigtrationRepository.findAllProjectByID(projectId);
+        Optional<ProjectEntity> projectOptional = projectRepository.getProjectByLeaderIdAndProjectId(leaderId,projectId);
         Optional< List<StudentEntity> >studentsOptional = studentResigtrationRepository.findAllStudentOfProject(projectId);
 
         if (projectOptional.isPresent()) {
@@ -127,7 +127,7 @@ public class ProjectService implements iProjectService {
             return projectMap;
         } else {
             throw new DataNotFoundException(
-                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId);
+                    "Cannot find project with leaderID: " + leaderId + " projectId: " + projectId + "or project not belongs to current leader");
         }
     }
 
