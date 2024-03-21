@@ -181,15 +181,28 @@ public class ProjectController {
                     .build());
         }
     }
-    @PostMapping("/rejectStudentByID")
+    @DeleteMapping("/rejectStudentByID/")
     public String rejectStudentByID(
-            @Valid @RequestParam("projectId") String projectId,
-            @Valid @RequestParam("address") String studentId)
+            @Valid @RequestParam("studentId") Long studentId,
+            @Valid @RequestParam("projectId") Long projectId)
     {
         try {
             // Call the service method to reject students by address
-            projectService.rejectStudentByID(Long.parseLong(projectId), Long.parseLong(studentId));
+            projectService.rejectStudentByID(projectId, studentId);
             return "Students rejected successfully";
+        } catch (Exception e) {
+            return "An error occurred: " + e.getMessage();
+        }
+    }
+
+    @PutMapping("/approveStudent/")
+    public String approveStudent(
+            @Valid @RequestParam("studentId") Long studentId,
+            @Valid @RequestParam("projectId") Long projectId)
+    {
+        try {
+            projectService.ApproveStudent(studentId, projectId);
+            return "Students approve successfully";
         } catch (Exception e) {
             return "An error occurred: " + e.getMessage();
         }

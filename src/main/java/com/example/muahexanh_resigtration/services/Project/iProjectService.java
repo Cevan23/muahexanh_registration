@@ -3,7 +3,7 @@ package com.example.muahexanh_resigtration.services.Project;
 import com.example.muahexanh_resigtration.dtos.ProjectDTO;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
-import org.springframework.data.repository.query.Param;
+import com.example.muahexanh_resigtration.entities.StudentsResigtrationEntity;
 
 import java.text.ParseException;
 import java.util.List;
@@ -36,4 +36,6 @@ public interface iProjectService {
     List<StudentEntity> getAllStudentOfProjectInOrtherAddress(Long projectId,String address) throws Exception;
 
     void rejectStudentByID(Long projectId,Long studentId) throws Exception;
+
+    StudentsResigtrationEntity ApproveStudent(Long studentId, Long projectId) throws Exception;
 }
