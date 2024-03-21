@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -179,7 +180,7 @@ public class StudentService implements iStudentService {
     }
 
 
-    public List<ProjectEntity> getAllProjectsOfUniversity(long studentId) throws Exception {
+    public List<Map<String, Object>> getAllProjectsOfUniversity(long studentId) throws Exception {
         Optional<StudentEntity> studentEntity = studentRepository.findById(studentId);
         if (studentEntity.isPresent()) {
             StudentEntity student = studentEntity.get();
@@ -187,8 +188,24 @@ public class StudentService implements iStudentService {
             Long universityId = universityRepository.getUniversityIdFromName(universityNameofStudent);
 
             List<ProjectEntity> projects = universityRepository.getAllProjectsOfUniversity(universityId);
+            List<Map<String, Object>> projectList = new ArrayList<>();
             if (!projects.isEmpty()) {
-                return projects;
+                return projects.stream()
+                        .map(project -> {
+                            Map<String, Object> projectMap = new HashMap<>();
+                            projectMap.put("id", project.getId());
+                            projectMap.put("title", project.getTitle());
+                            projectMap.put("description", project.getDescription());
+                            projectMap.put("address", project.getAddress());
+                            projectMap.put("maximumStudents", project.getMaxProjectMembers());
+                            projectMap.put("maximumSchoolsRegistrationMembers", project.getMaxSchoolRegistrationMembers());
+                            projectMap.put("status", project.getStatus());
+                            projectMap.put("dateStart", project.getDateStart());
+                            projectMap.put("dateEnd", project.getDateEnd());
+                            projectMap.put("imgRoot", project.getImgRoot());
+                            return projectMap;
+                        })
+                        .collect(Collectors.toList());
             } else {
                 throw new DataNotFoundException("No projects found for university with ID: " + universityId);
             }
