@@ -89,6 +89,21 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/getProjectDetailStudentAccepted/")
+    public ResponseEntity<?> getProjectbyLeaderIdAndProjectIdAccepted(@Valid @RequestParam("leaderId") Long leaderId,
+                                                              @Valid @RequestParam("projectId") Long projectId)  {
+        try{
+            Map<String, Object> project = projectService.getProjectByLeaderIdAndProjectIdStudentAccepted(leaderId,projectId);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .data(project)
+                    .message("Get detail project successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ResponseObject> updateProject(
             @PathVariable long id,

@@ -39,4 +39,6 @@ public interface iProjectService {
 
     StudentsResigtrationEntity ApproveStudent(Long studentId, Long projectId) throws Exception;
     Map<String, Object> getProjectByLeaderIdAndProjectIdStudentPending(long leaderId, long projectId) throws Exception;
+
+    Map<String, Object> getProjectByLeaderIdAndProjectIdStudentAccepted(long leaderId,long projectId) throws Exception;
 }
