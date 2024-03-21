@@ -255,7 +255,7 @@ public class ProjectService implements iProjectService {
     public ProjectEntity updateProject(long id, ProjectDTO projectDTO) throws Exception {
         Optional<ProjectEntity> optionalProduct = projectRepository.findById(id);
         if (optionalProduct.isPresent()) {
-            SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date parsed;
             java.sql.Date sqlDateStart, sqlDateEnd;
 
