@@ -1,5 +1,6 @@
 package com.example.muahexanh_resigtration.repositories;
 
+import com.example.muahexanh_resigtration.entities.CommunityLeaderEntity;
 import com.example.muahexanh_resigtration.entities.ProjectEntity;
 import com.example.muahexanh_resigtration.entities.StudentEntity;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
@@ -29,4 +30,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     @Query("SELECT p.maxSchoolRegistrationMembers FROM ProjectEntity p WHERE p.id = :projectId")
     Optional<Integer> getmaxSchoolRegistrationMembers(@Param("projectId") Long projectId);
+
+    @Query("SELECT cl FROM CommunityLeaderEntity cl JOIN cl.projects p WHERE p.id = :projectId")
+    Optional<CommunityLeaderEntity> getCommunityLeaderByProjectId(@Param("projectId") Long projectId);
 }
