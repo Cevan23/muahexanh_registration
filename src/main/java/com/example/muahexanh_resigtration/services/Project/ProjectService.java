@@ -206,7 +206,7 @@ public class ProjectService implements iProjectService {
 
     @Override
     public void rejectStudentByID(Long projectId,Long studentId) throws Exception {
-        StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId);
+        StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId,studentId);
         Optional< List<StudentEntity> > optionalStudents = studentResigtrationRepository.findAllStudentOfProject(projectId);
         if (project != null && optionalStudents.isPresent()) {
             List<StudentEntity> studentsOfProject = optionalStudents.orElse(new ArrayList<>());
