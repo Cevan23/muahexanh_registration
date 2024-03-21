@@ -7,17 +7,15 @@ import com.example.muahexanh_resigtration.entities.StudentEntity;
 
 import com.example.muahexanh_resigtration.entities.StudentsResigtrationEntity;
 import com.example.muahexanh_resigtration.exceptions.DataNotFoundException;
-import com.example.muahexanh_resigtration.repositories.ProjectRepository;
-import com.example.muahexanh_resigtration.repositories.StudentRepository;
-import com.example.muahexanh_resigtration.repositories.StudentResigtrationRepository;
+import com.example.muahexanh_resigtration.repositories.*;
 import com.example.muahexanh_resigtration.entities.UniversityEntity;
-import com.example.muahexanh_resigtration.repositories.UniversityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -161,11 +159,28 @@ public class StudentService implements iStudentService {
             if (numberOfStudentsFromSameUniversity < maxSchoolRegistrationMembers) {
                 Optional<ProjectEntity> optionalProject = projectRepository.findById(projectId);
                 if (optionalProject.isPresent()) {
-                    StudentsResigtrationEntity project = studentResigtrationRepository.findByProjectsId(projectId);
-                    // Thêm sinh viên vào danh sách sinh viên của dự án
-                    project.setStudent(student);
-                    // Lưu cập nhật vào cơ sở dữ liệu
-                    studentResigtrationRepository.save(project);
+                    ProjectEntity project = optionalProject.get();
+
+
+                    // Create a new StudentsResigtrationEntity instance
+                    StudentsResigtrationEntity studentsResigtrationEntity = new StudentsResigtrationEntity();
+
+                    // Create the composite key
+                    StudentsResigtrationEntityId id = new StudentsResigtrationEntityId();
+                    id.setProjectId(project.getId());
+                    id.setStudentId(student.getId());
+
+                    // Set the project and student for the registration entity
+                    studentsResigtrationEntity.setId(id);
+                    studentsResigtrationEntity.setProject(project);
+                    studentsResigtrationEntity.setStudent(student);
+
+                    // Set the registration status as needed
+                    studentsResigtrationEntity.setRegistration_status("pending");
+
+                    // Save the registration entity
+                    studentsResigtrationEntity = studentResigtrationRepository.save(studentsResigtrationEntity);
+
                 } else {
                     throw new Exception("Không tìm thấy dự án với ID đã cung cấp.");
                 }
@@ -179,7 +194,7 @@ public class StudentService implements iStudentService {
     }
 
 
-    public List<ProjectEntity> getAllProjectsOfUniversity(long studentId) throws Exception {
+    public List<Map<String, Object>> getAllProjectsOfUniversity(long studentId) throws Exception {
         Optional<StudentEntity> studentEntity = studentRepository.findById(studentId);
         if (studentEntity.isPresent()) {
             StudentEntity student = studentEntity.get();
@@ -187,8 +202,24 @@ public class StudentService implements iStudentService {
             Long universityId = universityRepository.getUniversityIdFromName(universityNameofStudent);
 
             List<ProjectEntity> projects = universityRepository.getAllProjectsOfUniversity(universityId);
+            List<Map<String, Object>> projectList = new ArrayList<>();
             if (!projects.isEmpty()) {
-                return projects;
+                return projects.stream()
+                        .map(project -> {
+                            Map<String, Object> projectMap = new HashMap<>();
+                            projectMap.put("id", project.getId());
+                            projectMap.put("title", project.getTitle());
+                            projectMap.put("description", project.getDescription());
+                            projectMap.put("address", project.getAddress());
+                            projectMap.put("maximumStudents", project.getMaxProjectMembers());
+                            projectMap.put("maximumSchoolsRegistrationMembers", project.getMaxSchoolRegistrationMembers());
+                            projectMap.put("status", project.getStatus());
+                            projectMap.put("dateStart", project.getDateStart());
+                            projectMap.put("dateEnd", project.getDateEnd());
+                            projectMap.put("imgRoot", project.getImgRoot());
+                            return projectMap;
+                        })
+                        .collect(Collectors.toList());
             } else {
                 throw new DataNotFoundException("No projects found for university with ID: " + universityId);
             }
@@ -216,8 +247,8 @@ public class StudentService implements iStudentService {
             projectMap.put("title", projectOptional.get().getTitle());
             projectMap.put("description", projectOptional.get().getDescription());
             projectMap.put("address", projectOptional.get().getAddress());
-            projectMap.put("maximumStudents", projectOptional.get().getMaxProjectMembers());
-            projectMap.put("maximumSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
+            projectMap.put("maxProjectMembers", projectOptional.get().getMaxProjectMembers());
+            projectMap.put("maxSchoolsRegistrationMembers", projectOptional.get().getMaxSchoolRegistrationMembers());
             projectMap.put("status", projectOptional.get().getStatus());
             projectMap.put("dateStart", projectOptional.get().getDateStart());
             projectMap.put("dateEnd", projectOptional.get().getDateEnd());

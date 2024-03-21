@@ -24,7 +24,7 @@ public interface iStudentService {
 
     List<StudentEntity> getAllStudent();
 
-    List<ProjectEntity> getAllProjectsOfUniversity (long studentId) throws Exception;
+    List<Map<String, Object>> getAllProjectsOfUniversity (long studentId) throws Exception;
     Map<String, Object> getAllStudentContainAddress(String address) throws Exception;
 
     Map<String, Object> getAllProjectOfStudent(Long studentId) throws Exception;
